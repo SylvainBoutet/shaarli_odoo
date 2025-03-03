@@ -34,5 +34,5 @@ Features:
     'license': 'LGPL-3',
     'price': 0,
     'currency': 'EUR',
-    "images": ["static/description/icon.png"],
+    "images": ["static/description/public_view.png"],
 }
