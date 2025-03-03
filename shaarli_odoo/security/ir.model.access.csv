@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_odoo_bookmark_user,odoo.bookmark.user,model_odoo_bookmark,shaarli_odoo.group_bookmark_user,1,1,1,1
+access_odoo_bookmark_tag_user,odoo.bookmark.tag.user,model_odoo_bookmark_tag,shaarli_odoo.group_bookmark_user,1,1,1,1
+
+access_odoo_bookmark_manager,odoo.bookmark.manager,model_odoo_bookmark,shaarli_odoo.group_bookmark_manager,1,1,1,1
+access_odoo_bookmark_tag_manager,odoo.bookmark.tag.manager,model_odoo_bookmark_tag,shaarli_odoo.group_bookmark_manager,1,1,1,1
+
+access_odoo_bookmark_public,odoo.bookmark.public,model_odoo_bookmark,base.group_public,1,0,0,0
+access_odoo_bookmark_tag_public,odoo.bookmark.tag.public,model_odoo_bookmark_tag,base.group_public,1,0,0,0

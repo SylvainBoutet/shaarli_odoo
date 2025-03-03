@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Public bookmarks list template -->
+    <template id="public_bookmarks" name="Public Bookmarks">
+        <t t-call="website.layout">
+            <!-- Styles intégrés -->
+            <style>
+                /* Styles pour les badges */
+                .badge { 
+                    font-weight: normal; 
+                    border-radius: 12px; 
+                    margin-right: 12px !important;     
+                    margin-bottom: 10px !important;    
+                    padding: 6px 12px !important;      /* Padding augmenté */
+                    display: inline-block;
+                    font-size: 0.85rem;
+                }
+                
+                /* Pour les badges dans la liste des filtres en haut */
+                .tag-filter .btn {
+                    margin-right: 15px !important;     
+                    margin-bottom: 12px !important;
+                }
+
+                /* Styles spécifiques pour les tags dans les cartes */
+                .tag-badges .badge {
+                    margin: 4px 16px 4px 0 !important;  /* Augmentation de la marge droite à 16px */
+                    min-width: 60px;                    
+                    text-align: center;                
+                    margin-left: 4px !important;        /* Ajout d'une marge gauche */
+                }
+
+                /* Style pour le conteneur des tags */
+                .tag-badges {
+                    gap: 12px;                          /* Augmentation du gap */
+                    margin-top: 8px;                   
+                }
+
+                /* Styles pour les cartes de bookmarks */
+                .bookmark-cards .card-body {
+                    padding: 1rem !important;  /* Réduction du padding général */
+                }
+
+                .bookmark-cards .card-title {
+                    font-size: 1rem !important;  /* Titre plus petit */
+                    margin-bottom: 0.25rem !important;  /* Moins d'espace sous le titre */
+                }
+
+                .bookmark-cards .card-subtitle {
+                    font-size: 0.8rem !important;  /* Sous-titre plus petit */
+                    margin-bottom: 0.5rem !important;  /* Moins d'espace sous le sous-titre */
+                }
+
+                .bookmark-cards .card-text {
+                    font-size: 0.9rem !important;  /* Description plus petite */
+                    margin-bottom: 0.5rem !important;  /* Moins d'espace sous la description */
+                }
+
+                /* Ajustement des espacements pour les badges de tags */
+                .bookmark-cards .tag-badges {
+                    margin-top: 0.5rem !important;
+                }
+
+                .bookmark-item {
+                    border: 1px solid #e5e5e5;
+                    border-radius: 4px;
+                    margin-bottom: 1rem;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                }
+                
+                .bookmark-content {
+                    padding: 0.75rem 1rem;
+                }
+                
+                .bookmark-info {
+                    background-color: #f8f9fa;
+                    border-top: 1px solid #e5e5e5;
+                    padding: 0.5rem 1rem;
+                    font-size: 0.9em;
+                }
+                
+                .bookmark-tags a {
+                    color: #666;
+                    text-decoration: none;
+                    margin-right: 1rem;
+                }
+                
+                .bookmark-tags a:hover {
+                    color: #28a745;
+                }
+            </style>
+            
+            <div class="container mt-4 mb-5">
+                <div class="row mb-4">
+                    <div class="col-lg-8">
+                        <h1 class="mb-0">Shared Bookmarks</h1>
+                        <p class="text-muted">Discover and explore our curated collection of links</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <form class="form-inline" action="/bookmarks" method="get">
+                            <div class="input-group w-100">
+                                <input type="text" name="search" class="form-control" 
+                                       placeholder="Search..." t-att-value="search_query"/>
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Tags -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="d-flex flex-wrap tag-filter">
+                            <a href="/bookmarks" 
+                               t-attf-class="btn btn-sm #{'' if current_tag else 'btn-primary'} rounded-pill mb-3 me-3 shadow-sm">
+                                All
+                            </a>
+                            <t t-foreach="tags" t-as="tag">
+                                <a t-att-href="'/bookmarks?tag=%s' % tag.name" 
+                                   t-attf-class="btn btn-sm btn-#{tag.name == current_tag and 'primary' or 'light'} rounded-pill mb-3 me-3 shadow-sm"
+                                   t-att-data-tag-color="tag.color or 0">
+                                    <t t-esc="tag.name"/> 
+                                    <span class="badge badge-light ms-2 rounded-pill"></span>
+                                </a>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bookmarks -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="bookmark-list">
+                            <t t-foreach="bookmarks" t-as="bookmark">
+                                <div class="bookmark-item">
+                                    <div class="bookmark-content" style="cursor: pointer;" t-att-onclick="'window.open(\'' + bookmark.url + '\', \'_blank\')'">
+                                        <div class="d-flex align-items-baseline">
+                                            <t t-if="bookmark.favicon">
+                                                <img t-att-src="'data:image/png;base64,%s' % bookmark.favicon" 
+                                                     class="me-2" width="16" height="16" alt="Favicon"/>
+                                            </t>
+                                            <span class="text-decoration-none">
+                                                <t t-esc="bookmark.name"/>
+                                            </span>
+                                            <span class="text-muted ms-2">
+                                                <small>· <t t-esc="bookmark.domain"/></small>
+                                            </span>
+                                        </div>
+                                        <t t-if="bookmark.description">
+                                            <div class="text-muted mt-1">
+                                                <small><t t-esc="bookmark.description"/></small>
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <div class="bookmark-info d-flex justify-content-between align-items-center">
+                                        <div class="bookmark-tags">
+                                            <t t-foreach="bookmark.tag_ids" t-as="tag">
+                                                <a t-att-href="'/bookmarks?tag=%s' % tag.name">
+                                                    #<t t-esc="tag.name"/>
+                                                </a>
+                                            </t>
+                                        </div>
+                                        <small class="text-muted">
+                                            <t t-esc="bookmark.create_date.strftime(request.env.user.lang and '%x' or '%Y-%m-%d')"/>
+                                        </small>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pager -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <t t-call="website.pager"/>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Scripts intégrés pour les couleurs des tags -->
+            <script type="text/javascript">
+                function getTagColor(colorIndex) {
+                    const colors = [
+                        '#F06050', '#F4A460', '#F7CD1F', '#6CC1ED', '#814968',
+                        '#EB7E7F', '#2C8397', '#475577', '#D6145F', '#30C381'
+                    ];
+                    return colors[colorIndex % colors.length] || '#6c757d';
+                }
+                
+                function getContrastColor(colorIndex) {
+                    const colors = [
+                        '#FFFFFF', '#000000', '#000000', '#000000', '#FFFFFF',
+                        '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#000000'
+                    ];
+                    return colors[colorIndex % colors.length] || '#FFFFFF';
+                }
+                
+                // Initialiser les couleurs des tags après chargement de la page
+                document.addEventListener('DOMContentLoaded', function() {
+                    document.querySelectorAll('[data-tag-color]').forEach(function(tag) {
+                        const colorIndex = parseInt(tag.getAttribute('data-tag-color'));
+                        tag.style.backgroundColor = getTagColor(colorIndex);
+                        tag.style.color = getContrastColor(colorIndex);
+                    });
+                });
+            </script>
+        </t>
+    </template>
+    
+    <!-- Single bookmark detail page -->
+    <template id="public_bookmark_detail" name="Bookmark Detail">
+        <t t-call="website.layout">
+            <!-- Styles intégrés -->
+            <style>
+                .badge { font-weight: normal; border-radius: 12px; }
+            </style>
+            
+            <div class="container mt-4 mb-5">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb bg-light shadow-sm">
+                                <li class="breadcrumb-item"><a href="/bookmarks">Bookmarks</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <t t-esc="bookmark.name"/>
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow">
+                            <div class="card-header bg-primary text-white">
+                                <div class="d-flex align-items-center">
+                                    <t t-if="bookmark.favicon">
+                                        <img t-att-src="'data:image/png;base64,%s' % bookmark.favicon" 
+                                             class="mr-2" width="24" height="24" alt="Favicon"/>
+                                    </t>
+                                    <h1 class="h4 mb-0"><t t-esc="bookmark.name"/></h1>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-7">
+                                        <strong>Original URL:</strong> 
+                                        <a t-att-href="bookmark.url" target="_blank" class="text-break">
+                                            <t t-esc="bookmark.url"/>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-5 text-md-right">
+                                        <span class="text-muted">
+                                            <i class="fa fa-calendar mr-1"></i>
+                                            <t t-if="bookmark.archived_date">
+                                                Archived on <t t-esc="bookmark.archived_date.strftime('%Y-%m-%d %H:%M')"/>
+                                            </t>
+                                            <t t-else="">
+                                                Added on <t t-esc="bookmark.create_date.strftime('%Y-%m-%d %H:%M')"/>
+                                            </t>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <t t-if="bookmark.description">
+                                    <div class="alert alert-info shadow-sm">
+                                        <t t-esc="bookmark.description"/>
+                                    </div>
+                                </t>
+                                
+                                <div class="mb-4">
+                                    <t t-foreach="tags" t-as="tag">
+                                        <a t-att-href="'/bookmarks?tag=%s' % tag.name" 
+                                        t-attf-class="btn btn-sm btn-#{tag.name == current_tag and 'primary' or 'light'} rounded-pill mb-3 mr-3 shadow-sm"
+                                        t-att-data-tag-color="tag.color or 0">
+                                            <t t-esc="tag.name"/> 
+                                            <span class="badge badge-light ml-1 rounded-pill"><t t-esc="tag.bookmark_count"/></span>
+                                        </a>
+                                    </t>
+                                </div>
+                                
+                                <!-- Archived content -->
+                                <t t-if="bookmark.has_archive">
+                                    <hr class="my-4"/>
+                                    <h4 class="mb-3">Archived Version</h4>
+                                    <div class="archived-content">
+                                        <t t-if="bookmark.content_type and 'text/html' in bookmark.content_type">
+                                            <div class="bg-light p-2 mb-2 rounded shadow-sm">
+                                                <small class="text-muted">Content Type: <t t-esc="bookmark.content_type"/></small>
+                                            </div>
+                                            <iframe sandbox="allow-same-origin" t-att-srcdoc="bookmark.archived_content" 
+                                                    class="w-100 shadow" style="min-height: 600px; border: 1px solid #ddd; border-radius: 4px;"></iframe>
+                                        </t>
+                                        <t t-else="">
+                                            <pre class="bg-light p-3 shadow-sm rounded"><t t-esc="bookmark.archived_content"/></pre>
+                                        </t>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Scripts intégrés pour les couleurs des tags -->
+            <script type="text/javascript">
+                function getTagColor(colorIndex) {
+                    const colors = [
+                        '#F06050', '#F4A460', '#F7CD1F', '#6CC1ED', '#814968',
+                        '#EB7E7F', '#2C8397', '#475577', '#D6145F', '#30C381'
+                    ];
+                    return colors[colorIndex % colors.length] || '#6c757d';
+                }
+                
+                function getContrastColor(colorIndex) {
+                    const colors = [
+                        '#FFFFFF', '#000000', '#000000', '#000000', '#FFFFFF',
+                        '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#000000'
+                    ];
+                    return colors[colorIndex % colors.length] || '#FFFFFF';
+                }
+                
+                // Initialiser les couleurs des tags après chargement de la page
+                document.addEventListener('DOMContentLoaded', function() {
+                    document.querySelectorAll('[data-tag-color]').forEach(function(tag) {
+                        const colorIndex = parseInt(tag.getAttribute('data-tag-color'));
+                        tag.style.backgroundColor = getTagColor(colorIndex);
+                        tag.style.color = getContrastColor(colorIndex);
+                    });
+                });
+            </script>
+        </t>
+    </template>
+</odoo>

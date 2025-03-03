@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu principal -->
+    <menuitem id="menu_bookmark_root" 
+              name="Bookmarks" 
+              sequence="80" 
+              web_icon="shaarli_odoo,static/description/icon.png"/>
+    
+    <!-- Sous-menu pour Mes Bookmarks -->
+    <menuitem id="menu_bookmarks" 
+              name="My Bookmarks" 
+              parent="menu_bookmark_root" 
+              action="action_bookmarks" 
+              sequence="10"/>
+    
+    <!-- Sous-menu pour les bookmarks publics -->
+    <menuitem id="menu_public_bookmarks" 
+              name="Public Bookmarks" 
+              parent="menu_bookmark_root" 
+              action="action_public_bookmarks" 
+              sequence="15"/>
+    
+    <!-- Sous-menu pour la gestion des tags -->
+    <menuitem id="menu_bookmark_tags" 
+              name="Tags" 
+              parent="menu_bookmark_root" 
+              action="action_bookmark_tags" 
+              sequence="20"/>
+    
+    <!-- Sous-menu pour les statistiques (visible seulement pour les managers) -->
+    <menuitem id="menu_bookmark_statistics" 
+              name="Statistics" 
+              parent="menu_bookmark_root" 
+              action="action_bookmark_statistics" 
+              sequence="30"
+              groups="shaarli_odoo.group_bookmark_manager"/>
+</odoo>

@@ -1,0 +1,585 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* shaarli_odoo
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-03 13:48+0000\n"
+"PO-Revision-Date: 2025-03-03 13:48+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_kanban
+msgid ""
+"<i class=\"fa fa-external-link\" role=\"img\" aria-label=\"Open URL\" "
+"title=\"Open URL\"/>"
+msgstr ""
+"<i class=\"fa fa-external-link\" role=\"img\" aria-label=\"Ouvrir l'URL\" "
+"title=\"Ouvrir l'URL\"/>"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmark_detail
+msgid "<strong>Original URL:</strong>"
+msgstr "<strong>URL originale:</strong>"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__message_needaction
+msgid "Action Needed"
+msgstr "Action nécessaire"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmark_detail
+msgid "Added on"
+msgstr ""
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmarks
+msgid "All"
+msgstr "Tout"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__archived_date
+msgid "Archive Date"
+msgstr "Date d'archivage"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
+msgid "Archive Page"
+msgstr "Page d'archivage"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
+msgid "Archived"
+msgstr "Archivé"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__archived_content
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_archived_page_form
+msgid "Archived Content"
+msgstr "Contenu archivé"
+
+#. module: shaarli_odoo
+#. odoo-python
+#: code:addons/shaarli_odoo/models/odoo_bookmark.py:0
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_archived_page_form
+msgid "Archived Page"
+msgstr "Page archivée"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmark_detail
+msgid "Archived Version"
+msgstr "Version archivée"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmark_detail
+msgid "Archived on"
+msgstr "Archivé le"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__message_attachment_count
+msgid "Attachment Count"
+msgstr "Nombre de pièces jointes"
+
+#. module: shaarli_odoo
+#: model:ir.model,name:shaarli_odoo.model_odoo_bookmark
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
+msgid "Bookmark"
+msgstr "Lien"
+
+#. module: shaarli_odoo
+#: model:ir.module.category,name:shaarli_odoo.module_bookmark_manager
+msgid "Bookmark Management"
+msgstr "Gestion des liens"
+
+#. module: shaarli_odoo
+#: model:res.groups,name:shaarli_odoo.group_bookmark_manager
+msgid "Bookmark Manager"
+msgstr "Gestionnaire de liens"
+
+#. module: shaarli_odoo
+#: model:ir.actions.act_window,name:shaarli_odoo.action_bookmark_statistics
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_graph
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_pivot
+msgid "Bookmark Statistics"
+msgstr "Statistiques des liens"
+
+#. module: shaarli_odoo
+#: model:ir.model,name:shaarli_odoo.model_odoo_bookmark_tag
+msgid "Bookmark Tag"
+msgstr "Tag de lien"
+
+#. module: shaarli_odoo
+#: model:res.groups,name:shaarli_odoo.group_bookmark_user
+msgid "Bookmark User"
+msgstr "Utilisateur de lien"
+
+#. module: shaarli_odoo
+#: model:ir.actions.act_window,name:shaarli_odoo.action_bookmarks
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark_tag__bookmark_count
+#: model:ir.ui.menu,name:shaarli_odoo.menu_bookmark_root
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmark_detail
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_kanban
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_tree
+msgid "Bookmarks"
+msgstr "Liens"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__click_count
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
+msgid "Clicks"
+msgstr "Clics"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__color
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark_tag__color
+msgid "Color Index"
+msgstr "Index de couleur"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__content_type
+msgid "Content Type"
+msgstr "Type de contenu"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmark_detail
+msgid "Content Type:"
+msgstr "Type de contenu:"
+
+#. module: shaarli_odoo
+#: model_terms:ir.actions.act_window,help:shaarli_odoo.action_bookmarks
+msgid "Create your first bookmark!"
+msgstr "Créer votre premier lien !"
+
+#. module: shaarli_odoo
+#: model_terms:ir.actions.act_window,help:shaarli_odoo.action_bookmark_tags
+msgid "Create your first tag!"
+msgstr "Créer votre premier tag !"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__create_uid
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark_tag__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__create_date
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark_tag__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_search
+msgid "Creation Date"
+msgstr "Date de création"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__description
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
+msgid "Description"
+msgstr "Description"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmarks
+msgid "Discover and explore our curated collection of links"
+msgstr "Découvrez et explorez notre collection de liens"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__display_name
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark_tag__display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__domain
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_search
+msgid "Domain"
+msgstr "Domaine"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__favicon
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmark_detail
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmarks
+msgid "Favicon"
+msgstr "Favicon"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__message_follower_ids
+msgid "Followers"
+msgstr "Abonnés"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Abonnés (Partenaires)"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,help:shaarli_odoo.field_odoo_bookmark__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icône Font Awesome e.g. fa-tasks"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_search
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_tag_search
+msgid "Group By"
+msgstr "Regrouper par"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__has_archive
+msgid "Has Archive"
+msgstr "A un archivage"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__has_message
+msgid "Has Message"
+msgstr "A un message"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__id
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark_tag__id
+msgid "ID"
+msgstr "ID"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__activity_exception_icon
+msgid "Icon"
+msgstr "Icône"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,help:shaarli_odoo.field_odoo_bookmark__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icône pour indiquer une activité exceptionnelle."
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,help:shaarli_odoo.field_odoo_bookmark__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Si coché, les nouveaux messages nécessitent votre attention."
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,help:shaarli_odoo.field_odoo_bookmark__message_has_error
+#: model:ir.model.fields,help:shaarli_odoo.field_odoo_bookmark__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Si coché, certains messages ont une erreur de livraison."
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,help:shaarli_odoo.field_odoo_bookmark__is_public
+msgid "If checked, this bookmark will be visible to everyone"
+msgstr "Si coché, ce lien sera visible pour tous."
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__message_is_follower
+msgid "Is Follower"
+msgstr "Est abonné"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__last_clicked
+msgid "Last Clicked"
+msgstr "Dernier clic"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__write_uid
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark_tag__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__write_date
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark_tag__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__message_has_error
+msgid "Message Delivery error"
+msgstr "Erreur de livraison de message"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__message_ids
+msgid "Messages"
+msgstr "Messages"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Date limite de l'activité"
+
+#. module: shaarli_odoo
+#: model:ir.ui.menu,name:shaarli_odoo.menu_bookmarks
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_search
+msgid "My Bookmarks"
+msgstr "Mes liens"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_tag_search
+msgid "My Tags"
+msgstr "Mes tags"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark_tag__name
+msgid "Name"
+msgstr "Nom"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Prochain événement calendaire"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Date limite de l'activité"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__activity_summary
+msgid "Next Activity Summary"
+msgstr "Résumé de l'activité"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__activity_type_id
+msgid "Next Activity Type"
+msgstr "Type d'activité"
+
+#. module: shaarli_odoo
+#: model_terms:ir.actions.act_window,help:shaarli_odoo.action_bookmark_statistics
+msgid "No bookmark statistics found!"
+msgstr "Aucune statistique de lien trouvée !"
+
+#. module: shaarli_odoo
+#: model_terms:ir.actions.act_window,help:shaarli_odoo.action_public_bookmarks
+msgid "No public bookmarks found!"
+msgstr "Aucun lien public trouvé !"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__notes
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
+msgid "Notes"
+msgstr "Notes"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Nombre d'actions"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,help:shaarli_odoo.field_odoo_bookmark__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Nombre de messages nécessitant une action"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,help:shaarli_odoo.field_odoo_bookmark__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Nombre de messages avec une erreur de livraison"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
+msgid "Open URL"
+msgstr "Ouvrir l'URL"
+
+#. module: shaarli_odoo
+#: model_terms:ir.actions.act_window,help:shaarli_odoo.action_bookmarks
+msgid ""
+"Organize your favorite links, share them with colleagues, and never lose a "
+"website again."
+msgstr "Organisez vos liens favoris, partagez-les avec vos collègues et ne perdez plus un site web."
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__user_id
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark_tag__user_id
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_search
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_tag_search
+msgid "Owner"
+msgstr "Propriétaire"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_search
+msgid "Private"
+msgstr "Privé"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__is_public
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_search
+msgid "Public"
+msgstr "Public"
+
+#. module: shaarli_odoo
+#: model:ir.actions.act_window,name:shaarli_odoo.action_public_bookmarks
+#: model:ir.ui.menu,name:shaarli_odoo.menu_public_bookmarks
+msgid "Public Bookmarks"
+msgstr "Liens publics"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__activity_user_id
+msgid "Responsible User"
+msgstr "Utilisateur responsable"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Erreur de livraison SMS"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_search
+msgid "Search Bookmarks"
+msgstr "Rechercher des liens"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_tag_search
+msgid "Search Tags"
+msgstr "Rechercher des tags"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmarks
+msgid "Search..."
+msgstr "Rechercher..."
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmarks
+msgid "Shared Bookmarks"
+msgstr "Liens partagés"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
+msgid "Short description..."
+msgstr "Description courte..."
+
+#. module: shaarli_odoo
+#: model_terms:ir.actions.act_window,help:shaarli_odoo.action_bookmark_statistics
+msgid "Start creating bookmarks to see statistics."
+msgstr "Créez des liens pour voir les statistiques."
+
+#. module: shaarli_odoo
+#: model:ir.ui.menu,name:shaarli_odoo.menu_bookmark_statistics
+msgid "Statistics"
+msgstr "Statistiques"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,help:shaarli_odoo.field_odoo_bookmark__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr "Statut basé sur les activités\n"
+"En retard: La date limite est déjà passée\n"
+"Aujourd'hui: La date de l'activité est aujourd'hui\n"
+"Planifié: Activités futures."
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_tag_form
+msgid "Tag"
+msgstr "Tag"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_tag_form
+msgid "Tag Name"
+msgstr "Nom du tag"
+
+#. module: shaarli_odoo
+#: model:ir.model.constraint,message:shaarli_odoo.constraint_odoo_bookmark_tag_name_user_uniq
+msgid "Tag name must be unique per user!"
+msgstr "Le nom du tag doit être unique par utilisateur !"
+
+#. module: shaarli_odoo
+#: model:ir.actions.act_window,name:shaarli_odoo.action_bookmark_tags
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__tag_ids
+#: model:ir.ui.menu,name:shaarli_odoo.menu_bookmark_tags
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_tag_tree
+msgid "Tags"
+msgstr "Tags"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__thumbnail
+msgid "Thumbnail"
+msgstr "Miniature"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__name
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
+msgid "Title"
+msgstr "Titre"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,help:shaarli_odoo.field_odoo_bookmark__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Type de l'activité exceptionnelle sur l'enregistrement."
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__url
+msgid "URL"
+msgstr "URL"
+
+#. module: shaarli_odoo
+#: model_terms:ir.actions.act_window,help:shaarli_odoo.action_bookmark_tags
+msgid "Use tags to categorize and organize your bookmarks."
+msgstr "Utilisez les tags pour catégoriser et organiser vos liens."
+
+#. module: shaarli_odoo
+#: model:ir.module.category,description:shaarli_odoo.module_bookmark_manager
+msgid "User access level for Bookmarks"
+msgstr "Niveau d'accès utilisateur pour les liens"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
+msgid "View Archive"
+msgstr "Afficher l'archive"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__website_message_ids
+msgid "Website Messages"
+msgstr "Messages du site web"
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,help:shaarli_odoo.field_odoo_bookmark__website_message_ids
+msgid "Website communication history"
+msgstr "Historique de communication du site web"
+
+#. module: shaarli_odoo
+#: model_terms:ir.actions.act_window,help:shaarli_odoo.action_public_bookmarks
+msgid "You can view all public bookmarks shared by other users here."
+msgstr "Vous pouvez voir tous les liens publics partagés par les autres utilisateurs ici."
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
+msgid "Your private notes..."
+msgstr "Vos notes privées..."
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmark_detail
+msgid "breadcrumb"
+msgstr "Fil d'Ariane"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
+msgid "https://..."
+msgstr "https://..."
