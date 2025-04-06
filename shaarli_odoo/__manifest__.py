@@ -16,7 +16,7 @@ Features:
 - Browser extension support
     """,
     'author': 'Chti-tech | Sylvain Boutet',
-    'website': 'https://www.chti-tech.eu',
+    'website': 'https://github.com/SylvainBoutet/shaarli_odoo.git',
     'depends': ['base', 'web', 'mail', 'website'],
     'data': [
         # SECURITY
@@ -32,5 +32,7 @@ Features:
     'installable': True,
     'application': True,
     'license': 'LGPL-3',
-
+    'price': 0,
+    'currency': 'EUR',
+    "images": ["static/description/public_view.png"],
 }
