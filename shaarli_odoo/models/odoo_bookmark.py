@@ -3,6 +3,7 @@ from odoo.exceptions import ValidationError
 import re
 from datetime import datetime
 
+
 class Bookmark(models.Model):
     _name = 'odoo.bookmark'
     _description = 'Bookmark'
@@ -19,7 +20,7 @@ class Bookmark(models.Model):
 
     tag_ids = fields.Many2many('odoo.bookmark.tag', string='Tags')
 
-    is_public = fields.Boolean('Public', default=False, 
+    is_public = fields.Boolean('Public', default=False,
                                help="If checked, this bookmark will be visible to everyone")
 
     user_id = fields.Many2one('res.users', string='Owner',

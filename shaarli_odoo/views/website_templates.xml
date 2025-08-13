@@ -103,7 +103,7 @@
                                        placeholder="Search..." t-att-value="search_query"/>
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fa fa-search"></i>
+                                        <i class="fa fa-search" title="Search bookmarks"></i>
                                     </button>
                                 </div>
                             </div>
@@ -256,7 +256,7 @@
                                     </div>
                                     <div class="col-md-5 text-md-right">
                                         <span class="text-muted">
-                                            <i class="fa fa-calendar mr-1"></i>
+                                            <i class="fa fa-calendar mr-1" title="Date information"></i>
                                             <t t-if="bookmark.archived_date">
                                                 Archived on <t t-esc="bookmark.archived_date.strftime('%Y-%m-%d %H:%M')"/>
                                             </t>

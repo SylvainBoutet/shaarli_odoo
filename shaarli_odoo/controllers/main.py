@@ -1,4 +1,4 @@
-from odoo import http
+from odoo import http, fields, _  # noqa: F401
 from odoo.http import request
 import json
 import requests
@@ -7,11 +7,11 @@ import base64
 import logging
 import io
 from PIL import Image
-from odoo import fields
 _logger = logging.getLogger(__name__)
 
+
 class BookmarkController(http.Controller):
-    
+
     @http.route('/api/bookmarks/add', type='json', auth='user')
     def add_bookmark(self, **kw):
         """API endpoint for browser extension to add bookmarks"""
@@ -19,10 +19,10 @@ class BookmarkController(http.Controller):
         title = kw.get('title')
         description = kw.get('description', '')
         tags = kw.get('tags', [])
-        
+
         if not url or not title:
             return {'success': False, 'error': 'URL and title are required'}
-        
+
         # Create or find tags
         tag_ids = []
         for tag_name in tags:
@@ -30,15 +30,15 @@ class BookmarkController(http.Controller):
                 ('name', '=', tag_name),
                 ('user_id', '=', request.env.user.id)
             ], limit=1)
-            
+
             if not tag:
                 tag = request.env['odoo.bookmark.tag'].create({
                     'name': tag_name,
                     'user_id': request.env.user.id
                 })
-            
+
             tag_ids.append(tag.id)
-        
+
         # Create bookmark
         bookmark = request.env['odoo.bookmark'].create({
             'name': title,
@@ -47,49 +47,56 @@ class BookmarkController(http.Controller):
             'tag_ids': [(6, 0, tag_ids)],
             'user_id': request.env.user.id
         })
-        
+
         return {
             'success': True,
             'id': bookmark.id
         }
-    
+
     @http.route('/bookmarks', type='http', auth='public', website=True)
     def public_bookmarks(self, tag=None, search=None, page=1, **kw):
         """Public page for bookmarks"""
         page = int(page)
         per_page = 20
-        
+
         domain = [('is_public', '=', True)]
-        
+
         if tag:
             domain.append(('tag_ids.name', '=', tag))
-        
+
         if search:
             domain.append('|')
             domain.append(('name', 'ilike', search))
             domain.append(('description', 'ilike', search))
-        
+
         bookmark_count = request.env['odoo.bookmark'].sudo().search_count(domain)
-        
+
+        # Prepare URL args, filtering out None values
+        url_args = {}
+        if tag:
+            url_args['tag'] = tag
+        if search:
+            url_args['search'] = search
+
         pager = request.website.pager(
             url='/bookmarks',
-            url_args={'tag': tag, 'search': search},
+            url_args=url_args,
             total=bookmark_count,
             page=page,
             step=per_page,
         )
-        
+
         bookmarks = request.env['odoo.bookmark'].sudo().search(
             domain, limit=per_page, offset=pager['offset'], order='create_date desc'
         )
-        
+
         # Get all tags for filter
         all_tags = request.env['odoo.bookmark.tag'].sudo().search([
             ('id', 'in', request.env['odoo.bookmark'].sudo().search([
                 ('is_public', '=', True)
             ]).mapped('tag_ids').ids)
         ])
-        
+
         return request.render('shaarli_odoo.public_bookmarks', {
             'bookmarks': bookmarks,
             'tags': all_tags,
@@ -102,32 +109,32 @@ class BookmarkController(http.Controller):
     def public_bookmark_detail(self, bookmark_id, **kw):
         """Public page for a single bookmark"""
         bookmark = request.env['odoo.bookmark'].sudo().browse(bookmark_id)
-        
+
         if not bookmark.exists() or not bookmark.is_public:
             return request.not_found()
-        
+
         # Increment view count
         bookmark.sudo().click_count += 1
         bookmark.sudo().last_clicked = fields.Datetime.now()
-        
+
         return request.render('shaarli_odoo.public_bookmark_detail', {
             'bookmark': bookmark,
         })
-    
+
     @http.route('/bookmarks/archive/<int:bookmark_id>', type='http', auth='user')
     def archive_page(self, bookmark_id, **kw):
         """Archive a webpage"""
         bookmark = request.env['odoo.bookmark'].browse(bookmark_id)
-        
+
         if not bookmark.exists():
             return request.not_found()
-            
+
         bookmark.ensure_one()
-        
+
         # Ensure the user has access to this bookmark
         if request.env.user.id != bookmark.user_id.id and not request.env.user.has_group('base.group_system'):
             return request.not_found()
-            
+
         # Archive the page
         try:
             self._archive_webpage(bookmark)
@@ -135,7 +142,7 @@ class BookmarkController(http.Controller):
         except Exception as e:
             _logger.error(f"Failed to archive page: {e}")
             return request.redirect(f'/web#id={bookmark_id}&model=odoo.bookmark&view_type=form&error=archive_failed')
-    
+
     def _archive_webpage(self, bookmark):
         """Archive a webpage content"""
         try:
@@ -144,20 +151,20 @@ class BookmarkController(http.Controller):
             }
             response = requests.get(bookmark.url, headers=headers, timeout=10)
             response.raise_for_status()
-            
+
             # Extract favicon if available
             favicon = None
             try:
-                favicon_response = requests.get(f"https://www.google.com/s2/favicons?domain={bookmark.domain}", 
-                                             headers=headers, timeout=5)
+                favicon_response = requests.get(f"https://www.google.com/s2/favicons?domain={bookmark.domain}",
+                                                headers=headers, timeout=5)
                 if favicon_response.status_code == 200:
                     favicon = base64.b64encode(favicon_response.content)
             except Exception as e:
                 _logger.warning(f"Failed to fetch favicon: {e}")
-            
+
             # Try to take a screenshot or thumbnail (simplified)
             thumbnail = None
-            
+
             # Save the archived content
             bookmark.write({
                 'archived_content': response.text,
@@ -166,12 +173,12 @@ class BookmarkController(http.Controller):
                 'thumbnail': thumbnail,
                 'content_type': response.headers.get('Content-Type', 'text/html'),
             })
-            
+
             return True
         except Exception as e:
             _logger.error(f"Failed to archive page: {e}")
             raise
-    
+
     # Dans controllers/main.py, ajoute ces fonctions
 
     def _get_tag_color(self, color_index):

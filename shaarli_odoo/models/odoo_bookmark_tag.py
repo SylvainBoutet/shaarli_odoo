@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 
+
 class BookmarkTag(models.Model):
     _name = 'odoo.bookmark.tag'
     _description = 'Bookmark Tag'

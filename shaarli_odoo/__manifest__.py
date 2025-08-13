@@ -1,6 +1,6 @@
 {
     'name': 'Odoo Bookmarks',
-    'version': '18.0.1.0.0',
+    'version': '18.0.2.0.0',
     'category': 'Website',
     'summary': 'Save and share bookmarks within Odoo',
     'description': """
@@ -18,6 +18,9 @@ Features:
     'author': 'Chti-tech | Sylvain Boutet',
     'website': 'https://github.com/SylvainBoutet/shaarli_odoo.git',
     'depends': ['base', 'web', 'mail', 'website'],
+    'external_dependencies': {
+        'python': ['requests', 'Pillow'],
+    },
     'data': [
         # SECURITY
         'security/security.xml',
