@@ -1,4 +1,5 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class BookmarkTag(models.Model):
@@ -13,9 +14,20 @@ class BookmarkTag(models.Model):
                               default=lambda self: self.env.user,
                               required=True, ondelete='cascade')
 
-    _sql_constraints = [
-        ('name_user_uniq', 'unique (name, user_id)', 'Tag name must be unique per user!')
-    ]
+    # Note: SQL constraints removed in Odoo 19 - using Python constraints only
+
+    @api.constrains('name', 'user_id')
+    def _check_name_user_unique(self):
+        """Ensure tag name uniqueness per user (Python constraint)"""
+        for record in self:
+            if record.name and record.user_id:
+                existing = self.search([
+                    ('name', '=', record.name),
+                    ('user_id', '=', record.user_id.id),
+                    ('id', '!=', record.id)
+                ])
+                if existing:
+                    raise ValidationError(_('Tag name must be unique per user!'))
 
     @api.depends('name')
     def _compute_bookmark_count(self):

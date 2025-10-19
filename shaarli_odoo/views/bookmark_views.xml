@@ -89,7 +89,7 @@
                 <filter string="My Bookmarks" name="my_bookmarks" domain="[('user_id', '=', uid)]"/>
                 <filter string="Public" name="public" domain="[('is_public', '=', True)]"/>
                 <filter string="Private" name="private" domain="[('is_public', '=', False)]"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Domain" name="group_by_domain" context="{'group_by': 'domain'}"/>
                     <filter string="Owner" name="group_by_user" context="{'group_by': 'user_id'}"/>
                     <filter string="Creation Date" name="group_by_date" context="{'group_by': 'create_date:month'}"/>

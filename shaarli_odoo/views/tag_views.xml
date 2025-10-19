@@ -43,7 +43,7 @@
             <search string="Search Tags">
                 <field name="name"/>
                 <filter string="My Tags" name="my_tags" domain="[('user_id', '=', uid)]"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Owner" name="group_by_user" context="{'group_by': 'user_id'}"/>
                 </group>
             </search>
