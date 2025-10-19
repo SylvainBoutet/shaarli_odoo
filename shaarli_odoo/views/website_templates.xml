@@ -336,4 +336,13 @@
             </script>
         </t>
     </template>
+
+    <!-- Website Menu -->
+    <record id="menu_bookmarks_website" model="website.menu">
+        <field name="name">Bookmarks</field>
+        <field name="url">/bookmarks</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">50</field>
+    </record>
+
 </odoo>

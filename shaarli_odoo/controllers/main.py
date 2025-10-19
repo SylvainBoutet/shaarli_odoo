@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 class BookmarkController(http.Controller):
 
-    @http.route('/api/bookmarks/add', type='json', auth='user')
+    @http.route('/api/bookmarks/add', type='jsonrpc', auth='user')
     def add_bookmark(self, **kw):
         """API endpoint for browser extension to add bookmarks"""
         url = kw.get('url')
