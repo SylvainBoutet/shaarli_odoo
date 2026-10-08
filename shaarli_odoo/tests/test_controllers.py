@@ -2,11 +2,14 @@
 
 from unittest.mock import MagicMock, patch
 
+import lxml.html
+
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import JsonRpcException, new_test_user
 from odoo.tools import mute_logger
 
-REQUESTS_GET = 'odoo.addons.shaarli_odoo.controllers.main.requests.get'
+FAVICON_B64 = 'aWNvbi1ieXRlcw=='  # base64 of b'icon-bytes'
+FAVICON_VALUE = FAVICON_B64
 
 
 @tagged('post_install', '-at_install')
@@ -90,6 +93,88 @@ class TestBookmarkController(HttpCase):
         response = self.url_open(f'/bookmarks/{self.public_bookmark.id}')
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Archived Version', response.content)
+
+    def _page(self, url):
+        response = self.url_open(url)
+        self.assertEqual(response.status_code, 200)
+        return lxml.html.fromstring(response.content)
+
+    def test_public_bookmarks_links(self):
+        """Titles link to the detail page, the external link opens a new tab"""
+        page = self._page('/bookmarks')
+        title = page.xpath('//a[hasclass("o_bookmark_title")][@href="/bookmarks/%s"]' % self.public_bookmark.id)
+        self.assertEqual(len(title), 1)
+        self.assertEqual(title[0].text_content().strip(), 'Public Test Bookmark')
+        external = page.xpath('//a[hasclass("o_bookmark_external")][@href="https://public-example.com"]')
+        self.assertEqual(len(external), 1)
+        self.assertEqual(external[0].get('target'), '_blank')
+        self.assertIn('noopener', external[0].get('rel'))
+        self.assertFalse(page.xpath('//*[@onclick]'))
+
+    def test_bookmark_detail_reachable_from_list(self):
+        """The title link opens the detail page"""
+        page = self._page('/bookmarks')
+        href = page.xpath('//a[hasclass("o_bookmark_title")][normalize-space()="Public Test Bookmark"]/@href')[0]
+        detail = self._page(href)
+        self.assertEqual(detail.xpath('//h1')[0].text_content().strip(), 'Public Test Bookmark')
+
+    def test_public_bookmarks_url_not_injected_in_script(self):
+        """A URL with a quote stays an attribute value"""
+        url = "https://example.com/it's"
+        self.public_bookmark.url = url
+        response = self.url_open('/bookmarks')
+        self.assertNotIn(b'window.open', response.content)
+        page = lxml.html.fromstring(response.content)
+        self.assertTrue(page.xpath('//a[hasclass("o_bookmark_external")][@href=$url]', url=url))
+
+    def test_public_bookmarks_favicon(self):
+        """The favicon is rendered as a data URI of its content"""
+        self.public_bookmark.favicon = FAVICON_VALUE
+        for url in ('/bookmarks', f'/bookmarks/{self.public_bookmark.id}'):
+            src = self._page(url).xpath('//img[hasclass("o_bookmark_favicon")]/@src')
+            self.assertEqual(src, [f'data:image/png;base64,{FAVICON_B64}'])
+
+    def test_public_bookmarks_selected_tag_highlighted(self):
+        """The selected tag is highlighted, All is not"""
+        self.public_bookmark.tag_ids = [(6, 0, [self.test_tag.id])]
+        page = self._page('/bookmarks?tag=testtag')
+        active = page.xpath('//div[hasclass("tag-filter")]/a[hasclass("active")]')
+        self.assertEqual([a.text_content().strip() for a in active], ['testtag'])
+        self.assertIn('btn-primary', active[0].get('class'))
+        self.assertIsNone(active[0].get('data-tag-color'))
+        page = self._page('/bookmarks')
+        active = page.xpath('//div[hasclass("tag-filter")]/a[hasclass("active")]')
+        self.assertEqual([a.text_content().strip() for a in active], ['All'])
+
+    def test_public_bookmarks_tag_url_encoded(self):
+        """Tag links encode the tag name"""
+        tag = self.env['odoo.bookmark.tag'].create({'name': 'c++ & co', 'user_id': self.test_user.id})
+        self.public_bookmark.tag_ids = [(6, 0, [tag.id])]
+        page = self._page('/bookmarks')
+        self.assertTrue(page.xpath('//a[@href="/bookmarks?tag=c%2B%2B+%26+co"]'))
+        page = self._page('/bookmarks?tag=c%2B%2B+%26+co')
+        titles = [a.text_content().strip() for a in page.xpath('//a[hasclass("o_bookmark_title")]')]
+        self.assertEqual(titles, ['Public Test Bookmark'])
+
+    def test_public_bookmarks_tags_listed_once(self):
+        """Two users' tags with the same name give one filter"""
+        other_user = new_test_user(
+            self.env, login='other_tag_owner',
+            groups='base.group_user,shaarli_odoo.group_bookmark_user')
+        other_tag = self.env['odoo.bookmark.tag'].create({'name': 'testtag', 'user_id': other_user.id})
+        self.public_bookmark.tag_ids = [(6, 0, [self.test_tag.id])]
+        self.other_public_bookmark.tag_ids = [(6, 0, [other_tag.id])]
+        page = self._page('/bookmarks')
+        filters = [a.text_content().strip() for a in page.xpath('//div[hasclass("tag-filter")]/a')]
+        self.assertEqual(filters, ['All', 'testtag'])
+
+    def test_bookmark_detail_page_tags(self):
+        """The detail page lists the tags of the bookmark"""
+        self.public_bookmark.tag_ids = [(6, 0, [self.test_tag.id])]
+        page = self._page(f'/bookmarks/{self.public_bookmark.id}')
+        tags = page.xpath('//a[hasclass("o_bookmark_detail_tag")]')
+        self.assertEqual([a.text_content().strip() for a in tags], ['testtag'])
+        self.assertEqual(tags[0].get('href'), '/bookmarks?tag=testtag')
 
     def test_bookmark_detail_page_private_not_found(self):
         """A private bookmark has no public detail page"""
@@ -219,9 +304,11 @@ class TestArchiveController(HttpCase):
         page = self._mock_response('<html><body>Test content</body></html>')
         favicon = self._mock_response('', content=b'icon-bytes')
         self.authenticate('test_archive_user', 'test_archive_user')
-        with patch(REQUESTS_GET, side_effect=[page, favicon]) as mock_get:
+        with patch.object(self.registry['odoo.bookmark'], '_archive_http_get', side_effect=[page, favicon]) as mock_get:
             response = self.url_open(f'/bookmarks/archive/{self.test_bookmark.id}', allow_redirects=False)
         self.assertEqual(response.status_code, 303)
+        self.assertTrue(response.headers['Location'].endswith(
+            f'/odoo/action-shaarli_odoo.action_bookmarks/{self.test_bookmark.id}'))
         self.assertEqual(mock_get.call_args_list[0].args[0], 'https://archive-test.com')
         self.test_bookmark.invalidate_recordset()
         # The Html field sanitizes the page: the text is kept
@@ -244,7 +331,7 @@ class TestArchiveController(HttpCase):
             'user_id': other_user.id,
         })
         self.authenticate('test_archive_user', 'test_archive_user')
-        with patch(REQUESTS_GET) as mock_get:
+        with patch.object(self.registry['odoo.bookmark'], '_archive_http_get') as mock_get:
             response = self.url_open(f'/bookmarks/archive/{other_bookmark.id}')
         self.assertEqual(response.status_code, 404)
         mock_get.assert_not_called()
@@ -260,7 +347,7 @@ class TestArchiveController(HttpCase):
     def test_archive_request_failure(self):
         """A network failure redirects with an error and stores nothing"""
         self.authenticate('test_archive_user', 'test_archive_user')
-        with patch(REQUESTS_GET, side_effect=Exception('Connection failed')):
+        with patch.object(self.registry['odoo.bookmark'], '_archive_http_get', side_effect=Exception('Connection failed')):
             response = self.url_open(f'/bookmarks/archive/{self.test_bookmark.id}', allow_redirects=False)
         self.assertEqual(response.status_code, 303)
         self.assertIn('error=archive_failed', response.headers['Location'])

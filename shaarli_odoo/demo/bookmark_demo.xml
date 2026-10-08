@@ -23,6 +23,7 @@
         <field name="url">https://www.odoo.com/documentation</field>
         <field name="description">Official user and developer documentation of Odoo.</field>
         <field name="is_public" eval="True"/>
+        <field name="click_count">42</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="tag_ids" eval="[Command.set([ref('demo_tag_odoo'), ref('demo_tag_documentation')])]"/>
     </record>
@@ -31,6 +32,7 @@
         <field name="url">https://github.com/odoo/odoo</field>
         <field name="description">Source code of the Odoo community edition.</field>
         <field name="is_public" eval="True"/>
+        <field name="click_count">17</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="tag_ids" eval="[Command.set([ref('demo_tag_odoo')])]"/>
     </record>
@@ -39,6 +41,7 @@
         <field name="url">https://docs.python.org/3/</field>
         <field name="description">Reference documentation of the Python language.</field>
         <field name="is_public" eval="True"/>
+        <field name="click_count">28</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="tag_ids" eval="[Command.set([ref('demo_tag_python'), ref('demo_tag_documentation')])]"/>
     </record>
@@ -48,6 +51,7 @@
         <field name="description">A private bookmark, not shown on the public page.</field>
         <field name="notes"><![CDATA[<p>Private notes about this link.</p>]]></field>
         <field name="is_public" eval="False"/>
+        <field name="click_count">3</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="tag_ids" eval="[Command.set([ref('demo_tag_documentation')])]"/>
     </record>
@@ -56,6 +60,7 @@
         <field name="url">https://example.org</field>
         <field name="description">A public bookmark with an archived copy of the page.</field>
         <field name="is_public" eval="True"/>
+        <field name="click_count">9</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="archived_content"><![CDATA[<h1>Example Domain</h1><p>This domain is for use in illustrative examples in documents.</p>]]></field>
         <field name="archived_date" eval="(DateTime.today() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>

@@ -1,5 +1,9 @@
 id,name,model_id,group_id/id,operation,domain
-access_odoo_bookmark_user,odoo.bookmark.user,odoo.bookmark,shaarli_odoo.group_bookmark_user,crud,
-access_odoo_bookmark_public,odoo.bookmark.public,odoo.bookmark,base.group_public,r,
-access_odoo_bookmark_tag_user,odoo.bookmark.tag.user,odoo.bookmark.tag,shaarli_odoo.group_bookmark_user,crud,
+access_odoo_bookmark_user_read,odoo.bookmark.user.read,odoo.bookmark,shaarli_odoo.group_bookmark_user,r,"['|', ('user_id', '=', user.id), ('is_public', '=', True)]"
+access_odoo_bookmark_user,odoo.bookmark.user,odoo.bookmark,shaarli_odoo.group_bookmark_user,cud,"[('user_id', '=', user.id)]"
+access_odoo_bookmark_manager,odoo.bookmark.manager,odoo.bookmark,shaarli_odoo.group_bookmark_manager,crud,
+access_odoo_bookmark_public,odoo.bookmark.public,odoo.bookmark,base.group_public,r,"[('is_public', '=', True)]"
+access_odoo_bookmark_tag_user_read,odoo.bookmark.tag.user.read,odoo.bookmark.tag,shaarli_odoo.group_bookmark_user,r,
+access_odoo_bookmark_tag_user,odoo.bookmark.tag.user,odoo.bookmark.tag,shaarli_odoo.group_bookmark_user,cud,"[('user_id', '=', user.id)]"
+access_odoo_bookmark_tag_manager,odoo.bookmark.tag.manager,odoo.bookmark.tag,shaarli_odoo.group_bookmark_manager,crud,
 access_odoo_bookmark_tag_public,odoo.bookmark.tag.public,odoo.bookmark.tag,base.group_public,r,

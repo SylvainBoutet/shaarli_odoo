@@ -1,13 +1,15 @@
-from odoo import http, fields, _  # noqa: F401
-from odoo.http import request
-import json
-import requests
-from datetime import datetime
-from odoo.tools import BinaryBytes
 import logging
-import io
-from PIL import Image
+from urllib.parse import urlencode
+
+from odoo import _, fields, http  # noqa: F401
+from odoo.http import request
+
 _logger = logging.getLogger(__name__)
+
+
+def _tag_url(tag_name):
+    """URL of the public page filtered on a tag, with the name encoded"""
+    return '/bookmarks?%s' % urlencode({'tag': tag_name})
 
 
 class BookmarkController(http.Controller):
@@ -93,12 +95,14 @@ class BookmarkController(http.Controller):
             domain, limit=per_page, offset=pager['offset'], order='create_date desc'
         )
 
-        # Get all tags for filter
-        all_tags = request.env['odoo.bookmark.tag'].sudo().search([
-            ('id', 'in', request.env['odoo.bookmark'].sudo().search([
-                ('is_public', '=', True)
-            ]).mapped('tag_ids').ids)
-        ])
+        # Get all tags for filter, one entry per name (tags are per user)
+        all_tags = request.env['odoo.bookmark'].sudo().search([
+            ('is_public', '=', True)
+        ]).tag_ids.sorted('name')
+        tag_by_name = {}
+        for public_tag in all_tags:
+            tag_by_name.setdefault(public_tag.name, public_tag)
+        all_tags = all_tags.browse([t.id for t in tag_by_name.values()])
 
         return request.render('shaarli_odoo.public_bookmarks', {
             'bookmarks': bookmarks,
@@ -106,6 +110,7 @@ class BookmarkController(http.Controller):
             'current_tag': tag,
             'search_query': search,
             'pager': pager,
+            'tag_url': _tag_url,
         })
 
     @http.route('/bookmarks/<int:bookmark_id>', type='http', auth='public', website=True, sitemap=False)
@@ -122,6 +127,7 @@ class BookmarkController(http.Controller):
 
         return request.render('shaarli_odoo.public_bookmark_detail', {
             'bookmark': bookmark,
+            'tag_url': _tag_url,
         })
 
     @http.route('/bookmarks/archive/<int:bookmark_id>', type='http', auth='user')
@@ -132,55 +138,17 @@ class BookmarkController(http.Controller):
         if not bookmark.exists():
             raise request.not_found()
 
-        bookmark.ensure_one()
-
-        # Ensure the user has access to this bookmark
-        if request.env.user.id != bookmark.user_id.id and not request.env.user.has_group('base.group_system'):
+        # Only the bookmarks the user may modify (record rules) can be archived
+        if not bookmark.has_access('write'):
             raise request.not_found()
 
         # Archive the page
         try:
-            self._archive_webpage(bookmark)
-            return request.redirect(f'/web#id={bookmark_id}&model=odoo.bookmark&view_type=form')
+            bookmark._archive_webpage()
+            return request.redirect(f'/odoo/action-shaarli_odoo.action_bookmarks/{bookmark_id}')
         except Exception as e:
-            _logger.error(f"Failed to archive page: {e}")
-            return request.redirect(f'/web#id={bookmark_id}&model=odoo.bookmark&view_type=form&error=archive_failed')
-
-    def _archive_webpage(self, bookmark):
-        """Archive a webpage content"""
-        try:
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (compatible; Odoo Bookmarks/1.0; +http://yourwebsite.com)'
-            }
-            response = requests.get(bookmark.url, headers=headers, timeout=10)
-            response.raise_for_status()
-
-            # Extract favicon if available
-            favicon = None
-            try:
-                favicon_response = requests.get(f"https://www.google.com/s2/favicons?domain={bookmark.domain}",
-                                                headers=headers, timeout=5)
-                if favicon_response.status_code == 200:
-                    favicon = BinaryBytes(favicon_response.content)
-            except Exception as e:
-                _logger.warning(f"Failed to fetch favicon: {e}")
-
-            # Try to take a screenshot or thumbnail (simplified)
-            thumbnail = None
-
-            # Save the archived content
-            bookmark.write({
-                'archived_content': response.text,
-                'archived_date': fields.Datetime.now(),
-                'favicon': favicon,
-                'thumbnail': thumbnail,
-                'content_type': response.headers.get('Content-Type', 'text/html'),
-            })
-
-            return True
-        except Exception as e:
-            _logger.error(f"Failed to archive page: {e}")
-            raise
+            _logger.error("Failed to archive page: %s", e)
+            return request.redirect(f'/odoo/action-shaarli_odoo.action_bookmarks/{bookmark_id}?error=archive_failed')
 
     # Dans controllers/main.py, ajoute ces fonctions
 

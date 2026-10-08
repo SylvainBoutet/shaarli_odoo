@@ -11,7 +11,7 @@
                 <field name="domain"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="create_date"/>
-                <field name="user_id" invisible="1"/> <!-- Needed for the owner-based filters and grouping -->
+                <field name="user_id" readonly="1" optional="show"/>
                 <field name="is_public" widget="boolean_toggle"/>
             </list>
         </field>
@@ -24,15 +24,17 @@
         <field name="arch" type="xml">
             <form string="Bookmark">
                 <header>
-                    <button name="action_open_url" string="Open URL" type="object" class="btn-primary"/>
-                    <button name="action_archive_page" string="Archive Page" type="object" 
-                            invisible="1 if has_archive else None"/>
+                    <button name="action_open_url" string="Open URL" type="object" class="btn-primary"
+                            invisible="not id"/>
+                    <button name="action_archive_page" string="Archive Page" type="object"
+                            invisible="not id or has_archive"/>
                     <button name="action_view_archive" string="View Archive" type="object" 
                             invisible="not has_archive" class="btn-primary"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_open_url" type="object" class="oe_stat_button" icon="open_in_new">
+                        <button name="action_open_url" type="object" class="oe_stat_button" icon="open_in_new"
+                                invisible="not id">
                             <field name="click_count" string="Clicks" widget="statinfo"/>
                         </button>
                         <button name="action_view_archive" type="object" class="oe_stat_button" icon="archive"
@@ -124,7 +126,7 @@
                                         <strong class="o_kanban_record_title">
                                             <field name="name"/>
                                         </strong>
-                                        <small class="o_kanban_record_subtitle text-muted">
+                                        <small class="o_kanban_record_subtitle text-muted d-block">
                                             <field name="domain"/>
                                         </small>
                                     </div>
@@ -139,7 +141,7 @@
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
-                                        <a t-att-href="record.url.raw_value" target="_blank">
+                                        <a t-att-href="record.url.raw_value" target="_blank" rel="noopener noreferrer">
                                             <i class="oi" data-icon="open_in_new" role="img" aria-label="Open URL" title="Open URL"></i>
                                         </a>
                                     </div>
