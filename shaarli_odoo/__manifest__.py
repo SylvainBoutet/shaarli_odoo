@@ -1,6 +1,6 @@
 {
     'name': 'Odoo Bookmarks',
-    'version': '19.0.2.0.1',
+    'version': '20.0.2.0.1',
     'category': 'Website',
     'summary': 'Save and share bookmarks within Odoo',
     'description': """
@@ -25,7 +25,7 @@ Features:
     'data': [
         # SECURITY
         'security/security.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
 
         # VIEWS
         'views/bookmark_views.xml',

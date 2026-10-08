@@ -32,12 +32,15 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_open_url" type="object" class="oe_stat_button" icon="fa-external-link">
+                        <button name="action_open_url" type="object" class="oe_stat_button" icon="open_in_new">
                             <field name="click_count" string="Clicks" widget="statinfo"/>
                         </button>
-                        <button name="action_view_archive" type="object" class="oe_stat_button" icon="fa-archive"
+                        <button name="action_view_archive" type="object" class="oe_stat_button" icon="archive"
                                 invisible="not has_archive">
-                            <field name="archived_date" string="Archived" widget="statinfo"/>
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Archived</span>
+                                <span class="o_stat_value"><field name="archived_date" readonly="1"/></span>
+                            </div>
                         </button>
                     </div>
                     <field name="has_archive" invisible="1"/> <!-- Needed for the archive buttons visibility -->
@@ -137,7 +140,7 @@
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
                                         <a t-att-href="record.url.raw_value" target="_blank">
-                                            <i class="fa fa-external-link" role="img" aria-label="Open URL" title="Open URL"></i>
+                                            <i class="oi" data-icon="open_in_new" role="img" aria-label="Open URL" title="Open URL"></i>
                                         </a>
                                     </div>
                                     <div class="oe_kanban_bottom_right">

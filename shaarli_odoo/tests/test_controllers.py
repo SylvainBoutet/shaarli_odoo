@@ -229,7 +229,7 @@ class TestArchiveController(HttpCase):
         self.assertTrue(self.test_bookmark.archived_date)
         self.assertTrue(self.test_bookmark.has_archive)
         self.assertEqual(self.test_bookmark.content_type, 'text/html')
-        self.assertTrue(self.test_bookmark.favicon)
+        self.assertEqual(self.test_bookmark.favicon.content, b'icon-bytes')
 
     def test_archive_unauthorized_bookmark(self):
         """A user cannot archive the bookmark of another user"""

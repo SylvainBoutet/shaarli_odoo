@@ -3,7 +3,7 @@ from odoo.http import request
 import json
 import requests
 from datetime import datetime
-import base64
+from odoo.tools import BinaryBytes
 import logging
 import io
 from PIL import Image
@@ -81,7 +81,7 @@ class BookmarkController(http.Controller):
         if search:
             url_args['search'] = search
 
-        pager = request.website.pager(
+        pager = request.env.website.pager(
             url='/bookmarks',
             url_args=url_args,
             total=bookmark_count,
@@ -161,7 +161,7 @@ class BookmarkController(http.Controller):
                 favicon_response = requests.get(f"https://www.google.com/s2/favicons?domain={bookmark.domain}",
                                                 headers=headers, timeout=5)
                 if favicon_response.status_code == 200:
-                    favicon = base64.b64encode(favicon_response.content)
+                    favicon = BinaryBytes(favicon_response.content)
             except Exception as e:
                 _logger.warning(f"Failed to fetch favicon: {e}")
 

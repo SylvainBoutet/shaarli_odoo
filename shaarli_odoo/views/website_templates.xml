@@ -2,9 +2,8 @@
 <odoo>
     <!-- Public bookmarks list template -->
     <template id="public_bookmarks" name="Public Bookmarks">
-        <t t-call="website.layout">
-            <!-- Page title: the view name is not translatable -->
-            <t t-set="additional_title">Shared Bookmarks</t>
+        <!-- Page title: the view name is not translatable -->
+        <t t-call="website.layout" additional_title.translate="Shared Bookmarks">
             <!-- Styles intégrés -->
             <style>
                 /* Styles pour les badges */
@@ -105,7 +104,7 @@
                                        placeholder="Search..." t-att-value="search_query"/>
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fa fa-search" title="Search bookmarks"></i>
+                                        <i class="oi" data-icon="search" title="Search bookmarks"></i>
                                     </button>
                                 </div>
                             </div>
@@ -125,7 +124,7 @@
                                 <a t-att-href="'/bookmarks?tag=%s' % tag.name" 
                                    t-attf-class="btn btn-sm btn-#{tag.name == current_tag and 'primary' or 'light'} rounded-pill mb-3 me-3 shadow-sm"
                                    t-att-data-tag-color="tag.color or 0">
-                                    <t t-esc="tag.name"/> 
+                                    <t t-out="tag.name"/> 
                                     <span class="badge badge-light ms-2 rounded-pill"></span>
                                 </a>
                             </t>
@@ -142,19 +141,19 @@
                                     <div class="bookmark-content" style="cursor: pointer;" t-att-onclick="'window.open(\'' + bookmark.url + '\', \'_blank\')'">
                                         <div class="d-flex align-items-baseline">
                                             <t t-if="bookmark.favicon">
-                                                <img t-att-src="'data:image/png;base64,%s' % bookmark.favicon" 
+                                                <img t-att-src="'data:image/png;base64,%s' % bookmark.favicon.to_base64()" 
                                                      class="me-2" width="16" height="16" alt="Favicon"/>
                                             </t>
                                             <span class="text-decoration-none">
-                                                <t t-esc="bookmark.name"/>
+                                                <t t-out="bookmark.name"/>
                                             </span>
                                             <span class="text-muted ms-2">
-                                                <small>· <t t-esc="bookmark.domain"/></small>
+                                                <small>· <t t-out="bookmark.domain"/></small>
                                             </span>
                                         </div>
                                         <t t-if="bookmark.description">
                                             <div class="text-muted mt-1">
-                                                <small><t t-esc="bookmark.description"/></small>
+                                                <small><t t-out="bookmark.description"/></small>
                                             </div>
                                         </t>
                                     </div>
@@ -162,12 +161,12 @@
                                         <div class="bookmark-tags">
                                             <t t-foreach="bookmark.tag_ids" t-as="tag">
                                                 <a t-att-href="'/bookmarks?tag=%s' % tag.name">
-                                                    #<t t-esc="tag.name"/>
+                                                    #<t t-out="tag.name"/>
                                                 </a>
                                             </t>
                                         </div>
                                         <small class="text-muted">
-                                            <t t-esc="bookmark.create_date.strftime(request.env.user.lang and '%x' or '%Y-%m-%d')"/>
+                                            <t t-out="bookmark.create_date.strftime(request.env.user.lang and '%x' or '%Y-%m-%d')"/>
                                         </small>
                                     </div>
                                 </div>
@@ -229,7 +228,7 @@
                             <ol class="breadcrumb bg-light shadow-sm">
                                 <li class="breadcrumb-item"><a href="/bookmarks">Bookmarks</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    <t t-esc="bookmark.name"/>
+                                    <t t-out="bookmark.name"/>
                                 </li>
                             </ol>
                         </nav>
@@ -242,10 +241,10 @@
                             <div class="card-header bg-primary text-white">
                                 <div class="d-flex align-items-center">
                                     <t t-if="bookmark.favicon">
-                                        <img t-att-src="'data:image/png;base64,%s' % bookmark.favicon" 
+                                        <img t-att-src="'data:image/png;base64,%s' % bookmark.favicon.to_base64()" 
                                              class="mr-2" width="24" height="24" alt="Favicon"/>
                                     </t>
-                                    <h1 class="h4 mb-0"><t t-esc="bookmark.name"/></h1>
+                                    <h1 class="h4 mb-0"><t t-out="bookmark.name"/></h1>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -253,17 +252,17 @@
                                     <div class="col-md-7">
                                         <strong>Original URL:</strong> 
                                         <a t-att-href="bookmark.url" target="_blank" class="text-break">
-                                            <t t-esc="bookmark.url"/>
+                                            <t t-out="bookmark.url"/>
                                         </a>
                                     </div>
                                     <div class="col-md-5 text-md-right">
                                         <span class="text-muted">
-                                            <i class="fa fa-calendar mr-1" title="Date information"></i>
+                                            <i class="oi oi-filled me-1" data-icon="calendar_today" title="Date information"></i>
                                             <t t-if="bookmark.archived_date">
-                                                Archived on <t t-esc="bookmark.archived_date.strftime('%Y-%m-%d %H:%M')"/>
+                                                Archived on <t t-out="bookmark.archived_date.strftime('%Y-%m-%d %H:%M')"/>
                                             </t>
                                             <t t-else="">
-                                                Added on <t t-esc="bookmark.create_date.strftime('%Y-%m-%d %H:%M')"/>
+                                                Added on <t t-out="bookmark.create_date.strftime('%Y-%m-%d %H:%M')"/>
                                             </t>
                                         </span>
                                     </div>
@@ -271,7 +270,7 @@
                                 
                                 <t t-if="bookmark.description">
                                     <div class="alert alert-info shadow-sm">
-                                        <t t-esc="bookmark.description"/>
+                                        <t t-out="bookmark.description"/>
                                     </div>
                                 </t>
                                 
@@ -280,8 +279,8 @@
                                         <a t-att-href="'/bookmarks?tag=%s' % tag.name" 
                                         t-attf-class="btn btn-sm btn-#{tag.name == current_tag and 'primary' or 'light'} rounded-pill mb-3 mr-3 shadow-sm"
                                         t-att-data-tag-color="tag.color or 0">
-                                            <t t-esc="tag.name"/> 
-                                            <span class="badge badge-light ml-1 rounded-pill"><t t-esc="tag.bookmark_count"/></span>
+                                            <t t-out="tag.name"/> 
+                                            <span class="badge badge-light ml-1 rounded-pill"><t t-out="tag.bookmark_count"/></span>
                                         </a>
                                     </t>
                                 </div>
@@ -293,13 +292,13 @@
                                     <div class="archived-content">
                                         <t t-if="bookmark.content_type and 'text/html' in bookmark.content_type">
                                             <div class="bg-light p-2 mb-2 rounded shadow-sm">
-                                                <small class="text-muted">Content Type: <t t-esc="bookmark.content_type"/></small>
+                                                <small class="text-muted">Content Type: <t t-out="bookmark.content_type"/></small>
                                             </div>
                                             <iframe sandbox="allow-same-origin" t-att-srcdoc="bookmark.archived_content" 
                                                     class="w-100 shadow" style="min-height: 600px; border: 1px solid #ddd; border-radius: 4px;"></iframe>
                                         </t>
                                         <t t-else="">
-                                            <pre class="bg-light p-3 shadow-sm rounded"><t t-esc="bookmark.archived_content"/></pre>
+                                            <pre class="bg-light p-3 shadow-sm rounded"><t t-out="bookmark.archived_content"/></pre>
                                         </t>
                                     </div>
                                 </t>

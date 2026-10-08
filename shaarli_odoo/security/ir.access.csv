@@ -1,0 +1,5 @@
+id,name,model_id,group_id/id,operation,domain
+access_odoo_bookmark_user,odoo.bookmark.user,odoo.bookmark,shaarli_odoo.group_bookmark_user,crud,
+access_odoo_bookmark_public,odoo.bookmark.public,odoo.bookmark,base.group_public,r,
+access_odoo_bookmark_tag_user,odoo.bookmark.tag.user,odoo.bookmark.tag,shaarli_odoo.group_bookmark_user,crud,
+access_odoo_bookmark_tag_public,odoo.bookmark.tag.public,odoo.bookmark.tag,base.group_public,r,

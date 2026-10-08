@@ -32,6 +32,7 @@ class BookmarkTag(models.Model):
     @api.depends('name')
     def _compute_bookmark_count(self):
         for tag in self:
+            # A tag not saved yet (NewId) has no bookmark
             tag.bookmark_count = self.env['odoo.bookmark'].search_count([
-                ('tag_ids', 'in', tag.id)
-            ])
+                ('tag_ids', 'in', tag._origin.ids)
+            ]) if tag._origin else 0
