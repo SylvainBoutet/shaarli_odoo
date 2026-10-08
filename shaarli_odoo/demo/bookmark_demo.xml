@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo tags, owned by the administrator -->
+    <record id="demo_tag_odoo" model="odoo.bookmark.tag">
+        <field name="name">odoo</field>
+        <field name="color">1</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="demo_tag_python" model="odoo.bookmark.tag">
+        <field name="name">python</field>
+        <field name="color">3</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="demo_tag_documentation" model="odoo.bookmark.tag">
+        <field name="name">documentation</field>
+        <field name="color">9</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <!-- Demo bookmarks: public ones are listed on /bookmarks -->
+    <record id="demo_bookmark_odoo_docs" model="odoo.bookmark">
+        <field name="name">Odoo Documentation</field>
+        <field name="url">https://www.odoo.com/documentation</field>
+        <field name="description">Official user and developer documentation of Odoo.</field>
+        <field name="is_public" eval="True"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[Command.set([ref('demo_tag_odoo'), ref('demo_tag_documentation')])]"/>
+    </record>
+    <record id="demo_bookmark_odoo_github" model="odoo.bookmark">
+        <field name="name">Odoo on GitHub</field>
+        <field name="url">https://github.com/odoo/odoo</field>
+        <field name="description">Source code of the Odoo community edition.</field>
+        <field name="is_public" eval="True"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[Command.set([ref('demo_tag_odoo')])]"/>
+    </record>
+    <record id="demo_bookmark_python_docs" model="odoo.bookmark">
+        <field name="name">Python Documentation</field>
+        <field name="url">https://docs.python.org/3/</field>
+        <field name="description">Reference documentation of the Python language.</field>
+        <field name="is_public" eval="True"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[Command.set([ref('demo_tag_python'), ref('demo_tag_documentation')])]"/>
+    </record>
+    <record id="demo_bookmark_example_private" model="odoo.bookmark">
+        <field name="name">Example Domain</field>
+        <field name="url">https://example.com</field>
+        <field name="description">A private bookmark, not shown on the public page.</field>
+        <field name="notes"><![CDATA[<p>Private notes about this link.</p>]]></field>
+        <field name="is_public" eval="False"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[Command.set([ref('demo_tag_documentation')])]"/>
+    </record>
+    <record id="demo_bookmark_archived" model="odoo.bookmark">
+        <field name="name">Archived Example Page</field>
+        <field name="url">https://example.org</field>
+        <field name="description">A public bookmark with an archived copy of the page.</field>
+        <field name="is_public" eval="True"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="archived_content"><![CDATA[<h1>Example Domain</h1><p>This domain is for use in illustrative examples in documents.</p>]]></field>
+        <field name="archived_date" eval="(DateTime.today() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="content_type">text/html</field>
+        <field name="tag_ids" eval="[Command.set([ref('demo_tag_documentation')])]"/>
+    </record>
+</odoo>

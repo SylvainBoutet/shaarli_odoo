@@ -53,10 +53,13 @@ class BookmarkController(http.Controller):
             'id': bookmark.id
         }
 
-    @http.route('/bookmarks', type='http', auth='public', website=True)
+    @http.route([
+        '/bookmarks',
+        '/bookmarks/page/<int:page>',
+    ], type='http', auth='public', website=True, sitemap=True)
     def public_bookmarks(self, tag=None, search=None, page=1, **kw):
         """Public page for bookmarks"""
-        page = int(page)
+        # The pager clamps the page and ignores non-numeric values
         per_page = 20
 
         domain = [('is_public', '=', True)]
@@ -105,13 +108,13 @@ class BookmarkController(http.Controller):
             'pager': pager,
         })
 
-    @http.route('/bookmarks/<int:bookmark_id>', type='http', auth='public', website=True)
+    @http.route('/bookmarks/<int:bookmark_id>', type='http', auth='public', website=True, sitemap=False)
     def public_bookmark_detail(self, bookmark_id, **kw):
         """Public page for a single bookmark"""
         bookmark = request.env['odoo.bookmark'].sudo().browse(bookmark_id)
 
         if not bookmark.exists() or not bookmark.is_public:
-            return request.not_found()
+            raise request.not_found()
 
         # Increment view count
         bookmark.sudo().click_count += 1
@@ -127,13 +130,13 @@ class BookmarkController(http.Controller):
         bookmark = request.env['odoo.bookmark'].browse(bookmark_id)
 
         if not bookmark.exists():
-            return request.not_found()
+            raise request.not_found()
 
         bookmark.ensure_one()
 
         # Ensure the user has access to this bookmark
         if request.env.user.id != bookmark.user_id.id and not request.env.user.has_group('base.group_system'):
-            return request.not_found()
+            raise request.not_found()
 
         # Archive the page
         try:

@@ -11,7 +11,7 @@
                 <field name="domain"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="create_date"/>
-                <field name="user_id" invisible="1"/>
+                <field name="user_id" invisible="1"/> <!-- Needed for the owner-based filters and grouping -->
                 <field name="is_public" widget="boolean_toggle"/>
             </list>
         </field>
@@ -40,8 +40,8 @@
                             <field name="archived_date" string="Archived" widget="statinfo"/>
                         </button>
                     </div>
-                    <field name="has_archive" invisible="1"/>
-                    <field name="color" widget="color_picker" invisible="1"/>
+                    <field name="has_archive" invisible="1"/> <!-- Needed for the archive buttons visibility -->
+                    <field name="color" widget="color_picker" invisible="1"/> <!-- Needed to keep the kanban color index in the form -->
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" placeholder="Title"/></h1>
