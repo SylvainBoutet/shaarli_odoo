@@ -7,9 +7,9 @@
         <field name="arch" type="xml">
             <list string="Tags" editable="bottom" sample="1">
                 <field name="name"/>
-                <field name="color" widget="color_picker"/>
+                <field name="color" widget="color_picker" string="Color"/>
                 <field name="bookmark_count"/>
-                <field name="user_id" invisible="1"/> <!-- Needed for the "My Tags" filter and owner grouping -->
+                <field name="user_id" readonly="1" optional="show"/>
             </list>
         </field>
     </record>
@@ -26,7 +26,7 @@
                         <h1><field name="name" placeholder="Tag Name"/></h1>
                     </div>
                     <group>
-                        <field name="color" widget="color_picker"/>
+                        <field name="color" widget="color_picker" string="Color"/>
                         <field name="bookmark_count"/>
                         <field name="user_id" groups="base.group_system"/>
                     </group>

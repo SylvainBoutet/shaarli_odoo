@@ -1,6 +1,6 @@
 {
     'name': 'Odoo Bookmarks',
-    'version': '18.0.2.0.2',
+    'version': '18.0.2.0.3',
     'category': 'Website',
     'summary': 'Save and share bookmarks within Odoo',
     'description': """
@@ -33,6 +33,11 @@ Features:
         'views/website_templates.xml',
         'views/menu.xml',
     ],
+    'assets': {
+        'web.assets_tests': [
+            'shaarli_odoo/static/tests/tours/**/*',
+        ],
+    },
     'demo': [
         'demo/bookmark_demo.xml',
     ],

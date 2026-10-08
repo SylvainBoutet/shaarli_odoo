@@ -117,16 +117,22 @@
                 <div class="row mb-4">
                     <div class="col-12">
                         <div class="d-flex flex-wrap tag-filter">
-                            <a href="/bookmarks" 
-                               t-attf-class="btn btn-sm #{'' if current_tag else 'btn-primary'} rounded-pill mb-3 me-3 shadow-sm">
+                            <a href="/bookmarks"
+                               t-attf-class="btn btn-sm #{'btn-light' if current_tag else 'btn-primary active'} rounded-pill mb-3 me-3 shadow-sm"
+                               t-att-aria-current="None if current_tag else 'page'">
                                 All
                             </a>
                             <t t-foreach="tags" t-as="tag">
-                                <a t-att-href="'/bookmarks?tag=%s' % tag.name" 
-                                   t-attf-class="btn btn-sm btn-#{tag.name == current_tag and 'primary' or 'light'} rounded-pill mb-3 me-3 shadow-sm"
+                                <!-- The selected tag keeps the primary style: no tag color on it -->
+                                <a t-if="tag.name == current_tag" t-att-href="tag_url(tag.name)"
+                                   class="btn btn-sm btn-primary active o_bookmark_tag_active rounded-pill mb-3 me-3 shadow-sm"
+                                   aria-current="page">
+                                    <t t-esc="tag.name"/>
+                                </a>
+                                <a t-else="" t-att-href="tag_url(tag.name)"
+                                   class="btn btn-sm btn-light rounded-pill mb-3 me-3 shadow-sm"
                                    t-att-data-tag-color="tag.color or 0">
-                                    <t t-esc="tag.name"/> 
-                                    <span class="badge badge-light ms-2 rounded-pill"></span>
+                                    <t t-esc="tag.name"/>
                                 </a>
                             </t>
                         </div>
@@ -139,15 +145,19 @@
                         <div class="bookmark-list">
                             <t t-foreach="bookmarks" t-as="bookmark">
                                 <div class="bookmark-item">
-                                    <div class="bookmark-content" style="cursor: pointer;" t-att-onclick="'window.open(\'' + bookmark.url + '\', \'_blank\')'">
+                                    <div class="bookmark-content">
                                         <div class="d-flex align-items-baseline">
                                             <t t-if="bookmark.favicon">
-                                                <img t-att-src="'data:image/png;base64,%s' % bookmark.favicon" 
-                                                     class="me-2" width="16" height="16" alt="Favicon"/>
+                                                <img t-att-src="image_data_uri(bookmark.favicon)"
+                                                     class="me-2 o_bookmark_favicon" width="16" height="16" alt="Favicon"/>
                                             </t>
-                                            <span class="text-decoration-none">
+                                            <a t-att-href="'/bookmarks/%s' % bookmark.id" class="o_bookmark_title">
                                                 <t t-esc="bookmark.name"/>
-                                            </span>
+                                            </a>
+                                            <a t-att-href="bookmark.url" target="_blank" rel="noopener noreferrer"
+                                               class="o_bookmark_external ms-2" title="Open the link in a new tab">
+                                                <i class="fa fa-external-link" role="img" aria-label="Open the link in a new tab"></i>
+                                            </a>
                                             <span class="text-muted ms-2">
                                                 <small>· <t t-esc="bookmark.domain"/></small>
                                             </span>
@@ -161,7 +171,7 @@
                                     <div class="bookmark-info d-flex justify-content-between align-items-center">
                                         <div class="bookmark-tags">
                                             <t t-foreach="bookmark.tag_ids" t-as="tag">
-                                                <a t-att-href="'/bookmarks?tag=%s' % tag.name">
+                                                <a t-att-href="tag_url(tag.name)">
                                                     #<t t-esc="tag.name"/>
                                                 </a>
                                             </t>
@@ -242,8 +252,8 @@
                             <div class="card-header bg-primary text-white">
                                 <div class="d-flex align-items-center">
                                     <t t-if="bookmark.favicon">
-                                        <img t-att-src="'data:image/png;base64,%s' % bookmark.favicon" 
-                                             class="mr-2" width="24" height="24" alt="Favicon"/>
+                                        <img t-att-src="image_data_uri(bookmark.favicon)"
+                                             class="me-2 o_bookmark_favicon" width="24" height="24" alt="Favicon"/>
                                     </t>
                                     <h1 class="h4 mb-0"><t t-esc="bookmark.name"/></h1>
                                 </div>
@@ -252,13 +262,13 @@
                                 <div class="row mb-3">
                                     <div class="col-md-7">
                                         <strong>Original URL:</strong> 
-                                        <a t-att-href="bookmark.url" target="_blank" class="text-break">
+                                        <a t-att-href="bookmark.url" target="_blank" rel="noopener noreferrer" class="text-break o_bookmark_external">
                                             <t t-esc="bookmark.url"/>
                                         </a>
                                     </div>
-                                    <div class="col-md-5 text-md-right">
+                                    <div class="col-md-5 text-md-end">
                                         <span class="text-muted">
-                                            <i class="fa fa-calendar mr-1" title="Date information"></i>
+                                            <i class="fa fa-calendar me-1" title="Date information"></i>
                                             <t t-if="bookmark.archived_date">
                                                 Archived on <t t-esc="bookmark.archived_date.strftime('%Y-%m-%d %H:%M')"/>
                                             </t>
@@ -276,12 +286,11 @@
                                 </t>
                                 
                                 <div class="mb-4">
-                                    <t t-foreach="tags" t-as="tag">
-                                        <a t-att-href="'/bookmarks?tag=%s' % tag.name" 
-                                        t-attf-class="btn btn-sm btn-#{tag.name == current_tag and 'primary' or 'light'} rounded-pill mb-3 mr-3 shadow-sm"
-                                        t-att-data-tag-color="tag.color or 0">
-                                            <t t-esc="tag.name"/> 
-                                            <span class="badge badge-light ml-1 rounded-pill"><t t-esc="tag.bookmark_count"/></span>
+                                    <t t-foreach="bookmark.tag_ids" t-as="tag">
+                                        <a t-att-href="tag_url(tag.name)"
+                                           class="btn btn-sm btn-light rounded-pill mb-3 me-3 shadow-sm o_bookmark_detail_tag"
+                                           t-att-data-tag-color="tag.color or 0">
+                                            <t t-esc="tag.name"/>
                                         </a>
                                     </t>
                                 </div>

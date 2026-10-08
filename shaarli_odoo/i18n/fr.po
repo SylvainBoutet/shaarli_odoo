@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-03 13:48+0000\n"
+"POT-Creation-Date: 2026-10-08 22:18+0000\n"
 "PO-Revision-Date: 2025-03-03 13:48+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -16,6 +16,11 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmark_detail
+msgid "<i class=\"fa fa-calendar me-1\" title=\"Date information\"/>"
+msgstr "<i class=\"fa fa-calendar me-1\" title=\"Informations de date\"/>"
+
+#. module: shaarli_odoo
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_kanban
 msgid ""
 "<i class=\"fa fa-external-link\" role=\"img\" aria-label=\"Open URL\" "
@@ -23,6 +28,25 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-external-link\" role=\"img\" aria-label=\"Ouvrir l'URL\" "
 "title=\"Ouvrir l'URL\"/>"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmarks
+msgid ""
+"<i class=\"fa fa-external-link\" role=\"img\" aria-label=\"Open the link in "
+"a new tab\"/>"
+msgstr ""
+"<i class=\"fa fa-external-link\" role=\"img\" aria-label=\"Ouvrir le lien "
+"dans un nouvel onglet\"/>"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmarks
+msgid "<i class=\"fa fa-search\" title=\"Search bookmarks\"/>"
+msgstr "<i class=\"fa fa-search\" title=\"Rechercher des liens\"/>"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
+msgid "<span class=\"o_stat_text\">Archived</span>"
+msgstr "<span class=\"o_stat_text\">Archivé</span>"
 
 #. module: shaarli_odoo
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmark_detail
@@ -75,11 +99,6 @@ msgid "Archive Page"
 msgstr "Page d'archivage"
 
 #. module: shaarli_odoo
-#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
-msgid "Archived"
-msgstr "Archivé"
-
-#. module: shaarli_odoo
 #: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__archived_content
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_archived_page_form
 msgid "Archived Content"
@@ -101,6 +120,14 @@ msgstr "Version archivée"
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmark_detail
 msgid "Archived on"
 msgstr "Archivé le"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_archived_page_form
+msgid ""
+"Are you sure you want to delete this archive? This action cannot be undone."
+msgstr ""
+"Voulez-vous vraiment supprimer cette archive ? Cette action est "
+"irréversible."
 
 #. module: shaarli_odoo
 #: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__message_attachment_count
@@ -157,6 +184,12 @@ msgid "Clicks"
 msgstr "Clics"
 
 #. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_tag_form
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_tag_tree
+msgid "Color"
+msgstr "Couleur"
+
+#. module: shaarli_odoo
 #: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__color
 #: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark_tag__color
 msgid "Color Index"
@@ -198,6 +231,11 @@ msgstr "Créé le"
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_search
 msgid "Creation Date"
 msgstr "Date de création"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_archived_page_form
+msgid "Delete Archive"
+msgstr "Supprimer l'archive"
 
 #. module: shaarli_odoo
 #: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__description
@@ -346,11 +384,6 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: shaarli_odoo
-#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Prochain événement calendaire"
-
-#. module: shaarli_odoo
 #: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Date limite de l'activité"
@@ -407,11 +440,18 @@ msgid "Open URL"
 msgstr "Ouvrir l'URL"
 
 #. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmarks
+msgid "Open the link in a new tab"
+msgstr "Ouvrir le lien dans un nouvel onglet"
+
+#. module: shaarli_odoo
 #: model_terms:ir.actions.act_window,help:shaarli_odoo.action_bookmarks
 msgid ""
 "Organize your favorite links, share them with colleagues, and never lose a "
 "website again."
-msgstr "Organisez vos liens favoris, partagez-les avec vos collègues et ne perdez plus un site web."
+msgstr ""
+"Organisez vos liens favoris, partagez-les avec vos collègues et ne perdez "
+"plus un site web."
 
 #. module: shaarli_odoo
 #: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__user_id
@@ -490,7 +530,8 @@ msgid ""
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
-msgstr "Statut basé sur les activités\n"
+msgstr ""
+"Statut basé sur les activités\n"
 "En retard: La date limite est déjà passée\n"
 "Aujourd'hui: La date de l'activité est aujourd'hui\n"
 "Planifié: Activités futures."
@@ -517,6 +558,12 @@ msgstr "Le nom du tag doit être unique par utilisateur !"
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_tag_tree
 msgid "Tags"
 msgstr "Tags"
+
+#. module: shaarli_odoo
+#. odoo-python
+#: code:addons/shaarli_odoo/models/odoo_bookmark.py:0
+msgid "The page could not be archived: %s"
+msgstr "La page n'a pas pu être archivée : %s"
 
 #. module: shaarli_odoo
 #: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__thumbnail
@@ -567,7 +614,9 @@ msgstr "Historique de communication du site web"
 #. module: shaarli_odoo
 #: model_terms:ir.actions.act_window,help:shaarli_odoo.action_public_bookmarks
 msgid "You can view all public bookmarks shared by other users here."
-msgstr "Vous pouvez voir tous les liens publics partagés par les autres utilisateurs ici."
+msgstr ""
+"Vous pouvez voir tous les liens publics partagés par les autres utilisateurs"
+" ici."
 
 #. module: shaarli_odoo
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
@@ -583,3 +632,8 @@ msgstr "Fil d'Ariane"
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
 msgid "https://..."
 msgstr "https://..."
+
+#. module: shaarli_odoo
+#: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Prochain événement calendaire"

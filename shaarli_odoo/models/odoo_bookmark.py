@@ -1,7 +1,17 @@
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+import base64
+import logging
 import re
-from datetime import datetime
+
+import requests
+
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError  # noqa: F401
+
+_logger = logging.getLogger(__name__)
+
+ARCHIVE_HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (compatible; Odoo Bookmarks/1.0)',
+}
 
 
 class Bookmark(models.Model):
@@ -80,12 +90,40 @@ class Bookmark(models.Model):
         }
 
     def action_archive_page(self):
+        """Archive the page from the form: the form reloads, breadcrumbs kept"""
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'url': f'/bookmarks/archive/{self.id}',
-            'target': 'self',
-        }
+        try:
+            self._archive_webpage()
+        except requests.RequestException as e:
+            raise UserError(_("The page could not be archived: %s", e)) from e
+        return True
+
+    def _archive_http_get(self, url, timeout):
+        """HTTP GET used to archive a page (single entry point for the network)"""
+        return requests.get(url, headers=ARCHIVE_HEADERS, timeout=timeout)
+
+    def _archive_webpage(self):
+        """Fetch the page and its favicon, store them on the bookmark"""
+        self.ensure_one()
+        response = self._archive_http_get(self.url, 10)
+        response.raise_for_status()
+
+        favicon = False
+        try:
+            favicon_response = self._archive_http_get(
+                f"https://www.google.com/s2/favicons?domain={self.domain}", 5)
+            if favicon_response.status_code == 200 and favicon_response.content:
+                favicon = base64.b64encode(favicon_response.content)
+        except requests.RequestException as e:
+            _logger.warning("Failed to fetch favicon: %s", e)
+
+        self.write({
+            'archived_content': response.text,
+            'archived_date': fields.Datetime.now(),
+            'favicon': favicon,
+            'content_type': response.headers.get('Content-Type', 'text/html'),
+        })
+        return True
 
     def action_view_archive(self):
         self.ensure_one()
