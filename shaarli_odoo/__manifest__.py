@@ -1,6 +1,6 @@
 {
     'name': 'Odoo Bookmarks',
-    'version': '19.0.2.0.0',
+    'version': '19.0.2.0.1',
     'category': 'Website',
     'summary': 'Save and share bookmarks within Odoo',
     'description': """
@@ -8,6 +8,7 @@ Odoo Bookmarks
 ==============
 A Shaarli-like bookmarking system integrated with Odoo.
 Features:
+
 - Save bookmarks with description and notes
 - Organize with tags
 - Public/private sharing options
@@ -31,6 +32,9 @@ Features:
         'views/tag_views.xml',
         'views/website_templates.xml',
         'views/menu.xml',
+    ],
+    'demo': [
+        'demo/bookmark_demo.xml',
     ],
     'installable': True,
     'application': True,

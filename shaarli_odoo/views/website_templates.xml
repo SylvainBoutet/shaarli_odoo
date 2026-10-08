@@ -3,6 +3,8 @@
     <!-- Public bookmarks list template -->
     <template id="public_bookmarks" name="Public Bookmarks">
         <t t-call="website.layout">
+            <!-- Page title: the view name is not translatable -->
+            <t t-set="additional_title">Shared Bookmarks</t>
             <!-- Styles intégrés -->
             <style>
                 /* Styles pour les badges */

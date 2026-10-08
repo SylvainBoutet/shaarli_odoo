@@ -2,245 +2,129 @@
 
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import new_test_user
-import re
 
 
-@tagged('-at_install', 'post_install')
+@tagged('post_install', '-at_install')
 class TestPagination(HttpCase):
-    """Tests for pagination functionality in public bookmarks"""
+    """Tests for the pager of the public bookmarks page (20 per page)"""
 
-    def setUp(self):
-        super().setUp()
-        self.test_user = new_test_user(
-            self.env,
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Keep only the bookmarks of this test on the public page
+        cls.env['odoo.bookmark'].search([('is_public', '=', True)]).write({'is_public': False})
+        cls.test_user = new_test_user(
+            cls.env,
             login='pagination_test_user',
-            groups='base.group_user,shaarli_odoo.group_bookmark_user'
+            groups='base.group_user,shaarli_odoo.group_bookmark_user',
         )
-
-        # Create test tags
-        self.tag_python = self.env['odoo.bookmark.tag'].create({
+        cls.tag_python = cls.env['odoo.bookmark.tag'].create({
             'name': 'python',
-            'user_id': self.test_user.id
+            'user_id': cls.test_user.id,
         })
-        self.tag_django = self.env['odoo.bookmark.tag'].create({
+        cls.tag_django = cls.env['odoo.bookmark.tag'].create({
             'name': 'django',
-            'user_id': self.test_user.id
+            'user_id': cls.test_user.id,
         })
 
-    def _create_test_bookmarks(self, count, public=True, tag=None, name_prefix="Test Bookmark"):
-        """Helper method to create multiple test bookmarks"""
-        bookmarks = self.env['odoo.bookmark']
-        for i in range(count):
-            bookmark_data = {
-                'name': f'{name_prefix} {i+1}',
-                'url': f'https://example-{i+1}.com',
-                'description': f'Description for bookmark {i+1}',
-                'is_public': public,
-                'user_id': self.test_user.id
-            }
+    def _create_test_bookmarks(self, count, tag=None, name_prefix='Test Bookmark'):
+        return self.env['odoo.bookmark'].create([{
+            'name': f'{name_prefix} {i + 1}',
+            'url': f'https://example-{i + 1}.com',
+            'is_public': True,
+            'user_id': self.test_user.id,
+            'tag_ids': [(6, 0, tag.ids)] if tag else False,
+        } for i in range(count)])
 
-            bookmark = self.env['odoo.bookmark'].create(bookmark_data)
-
-            if tag:
-                bookmark.tag_ids = [(6, 0, [tag.id])]
-
-            bookmarks |= bookmark
-
-        return bookmarks
+    def _get(self, url):
+        response = self.url_open(url)
+        self.assertEqual(response.status_code, 200)
+        return response.content.decode('utf-8')
 
     def test_no_pagination_with_few_bookmarks(self):
-        """Test that pagination is not shown when there are <= 20 bookmarks"""
-        # Create only 15 public bookmarks
+        """No pager under 20 bookmarks"""
         self._create_test_bookmarks(15)
-
-        response = self.url_open('/bookmarks')
-        self.assertEqual(response.status_code, 200)
-
-        # Check that pagination is not present
-        content = response.content.decode('utf-8')
-        self.assertNotIn('pagination', content)
+        content = self._get('/bookmarks')
+        self.assertEqual(content.count('Test Bookmark'), 15)
         self.assertNotIn('page-item', content)
 
     def test_pagination_with_many_bookmarks(self):
-        """Test that pagination appears when there are > 20 bookmarks"""
-        # Create 25 public bookmarks
+        """20 bookmarks on the first page, with a pager link to page 2"""
         self._create_test_bookmarks(25)
-
-        response = self.url_open('/bookmarks')
-        self.assertEqual(response.status_code, 200)
-
-        # Check that pagination is present
-        content = response.content.decode('utf-8')
-        self.assertIn('pagination', content)
+        content = self._get('/bookmarks')
         self.assertIn('page-item', content)
-
-        # Check that only 20 bookmarks are shown on first page
-        bookmark_count = content.count('Test Bookmark')
-        self.assertEqual(bookmark_count, 20)
+        self.assertIn('href="/bookmarks/page/2"', content)
+        self.assertEqual(content.count('Test Bookmark'), 20)
 
     def test_pagination_page_2(self):
-        """Test accessing page 2 of pagination"""
-        # Create 25 public bookmarks
-        bookmarks = self._create_test_bookmarks(25)
+        """The pager link of page 2 shows the remaining bookmarks"""
+        self._create_test_bookmarks(25)
+        content = self._get('/bookmarks/page/2')
+        self.assertEqual(content.count('Test Bookmark'), 5)
+        self.assertIn('page-item', content)
 
-        response = self.url_open('/bookmarks?page=2')
-        self.assertEqual(response.status_code, 200)
-
-        content = response.content.decode('utf-8')
-
-        # Should show remaining 5 bookmarks
-        bookmark_count = content.count('Test Bookmark')
-        self.assertEqual(bookmark_count, 5)
-
-        # Check pagination navigation
-        self.assertIn('pagination', content)
+    def test_pagination_page_query_parameter(self):
+        """The page can also be given as a query parameter"""
+        self._create_test_bookmarks(25)
+        content = self._get('/bookmarks?page=2')
+        self.assertEqual(content.count('Test Bookmark'), 5)
 
     def test_pagination_with_search_filter(self):
-        """Test pagination with search filter applied"""
-        # Create 25 bookmarks, some with 'python' in name
-        self._create_test_bookmarks(15, name_prefix="Python Tutorial")
-        self._create_test_bookmarks(10, name_prefix="Django Guide")
-
-        # Search for 'python' - should return 15 results but paginated
-        response = self.url_open('/bookmarks?search=python')
-        self.assertEqual(response.status_code, 200)
-
-        content = response.content.decode('utf-8')
-
-        # All results should contain 'python'
-        self.assertIn('Python Tutorial', content)
+        """The search applies before the pager"""
+        self._create_test_bookmarks(15, name_prefix='Python Tutorial')
+        self._create_test_bookmarks(10, name_prefix='Django Guide')
+        content = self._get('/bookmarks?search=python')
+        self.assertEqual(content.count('Python Tutorial'), 15)
         self.assertNotIn('Django Guide', content)
-
-        # No pagination needed (only 15 results)
-        self.assertNotIn('pagination', content)
+        self.assertNotIn('page-item', content)
 
     def test_pagination_with_tag_filter(self):
-        """Test pagination with tag filter applied"""
-        # Create 25 bookmarks with python tag
-        self._create_test_bookmarks(25, tag=self.tag_python, name_prefix="Python Resource")
-        # Create 10 bookmarks with django tag
-        self._create_test_bookmarks(10, tag=self.tag_django, name_prefix="Django Resource")
-
-        # Filter by python tag
-        response = self.url_open('/bookmarks?tag=python')
-        self.assertEqual(response.status_code, 200)
-
-        content = response.content.decode('utf-8')
-
-        # Should show python resources with pagination
-        self.assertIn('Python Resource', content)
+        """The tag filter applies before the pager"""
+        self._create_test_bookmarks(25, tag=self.tag_python, name_prefix='Python Resource')
+        self._create_test_bookmarks(10, tag=self.tag_django, name_prefix='Django Resource')
+        content = self._get('/bookmarks?tag=python')
+        self.assertEqual(content.count('Python Resource'), 20)
         self.assertNotIn('Django Resource', content)
-        self.assertIn('pagination', content)
-
-        # Should show 20 items on first page
-        resource_count = content.count('Python Resource')
-        self.assertEqual(resource_count, 20)
+        self.assertIn('page-item', content)
 
     def test_pagination_preserves_search_params(self):
-        """Test that pagination links preserve search parameters"""
-        # Create enough bookmarks to trigger pagination
-        self._create_test_bookmarks(25, name_prefix="Python Tutorial")
-
-        response = self.url_open('/bookmarks?search=python')
-        self.assertEqual(response.status_code, 200)
-
-        content = response.content.decode('utf-8')
-
-        # Check that pagination links contain search parameter
-        # Look for links like /bookmarks?search=python&page=2
-        search_param_pattern = r'href="[^"]*search=python[^"]*"'
-        matches = re.findall(search_param_pattern, content)
-
-        # Should find pagination links with search parameter preserved
-        # (This test assumes pagination is shown, adjust if needed)
-        if 'pagination' in content:
-            self.assertTrue(len(matches) > 0, "Pagination links should preserve search parameter")
+        """Pager links keep the search parameter"""
+        self._create_test_bookmarks(25, name_prefix='Python Tutorial')
+        content = self._get('/bookmarks?search=python')
+        self.assertIn('href="/bookmarks/page/2?search=python"', content)
 
     def test_pagination_preserves_tag_params(self):
-        """Test that pagination links preserve tag parameters"""
-        # Create enough bookmarks to trigger pagination
+        """Pager links keep the tag parameter"""
         self._create_test_bookmarks(25, tag=self.tag_python)
-
-        response = self.url_open('/bookmarks?tag=python')
-        self.assertEqual(response.status_code, 200)
-
-        content = response.content.decode('utf-8')
-
-        # Check that pagination links contain tag parameter
-        tag_param_pattern = r'href="[^"]*tag=python[^"]*"'
-        matches = re.findall(tag_param_pattern, content)
-
-        # Should find pagination links with tag parameter preserved
-        if 'pagination' in content:
-            self.assertTrue(len(matches) > 0, "Pagination links should preserve tag parameter")
+        content = self._get('/bookmarks?tag=python')
+        self.assertIn('href="/bookmarks/page/2?tag=python"', content)
 
     def test_pagination_combined_filters(self):
-        """Test pagination with both search and tag filters"""
-        # Create bookmarks with python tag
-        self._create_test_bookmarks(15, tag=self.tag_python, name_prefix="Python Tutorial")
-        self._create_test_bookmarks(10, tag=self.tag_python, name_prefix="Python Advanced")
-        self._create_test_bookmarks(5, tag=self.tag_django, name_prefix="Python Django")
-
-        # Search for 'tutorial' with python tag
-        response = self.url_open('/bookmarks?tag=python&search=tutorial')
-        self.assertEqual(response.status_code, 200)
-
-        content = response.content.decode('utf-8')
-
-        # Should only show Python Tutorial bookmarks
-        self.assertIn('Python Tutorial', content)
+        """Search and tag filters combine"""
+        self._create_test_bookmarks(15, tag=self.tag_python, name_prefix='Python Tutorial')
+        self._create_test_bookmarks(10, tag=self.tag_python, name_prefix='Python Advanced')
+        self._create_test_bookmarks(5, tag=self.tag_django, name_prefix='Python Django')
+        content = self._get('/bookmarks?tag=python&search=tutorial')
+        self.assertEqual(content.count('Python Tutorial'), 15)
         self.assertNotIn('Python Advanced', content)
         self.assertNotIn('Python Django', content)
 
-    def test_pagination_invalid_page_number(self):
-        """Test pagination with invalid page number"""
+    def test_pagination_out_of_range_page(self):
+        """Out of range pages fall back on the first or last page"""
         self._create_test_bookmarks(25)
-
-        # Test page 0 (should default to page 1)
-        response = self.url_open('/bookmarks?page=0')
-        self.assertEqual(response.status_code, 200)
-
-        # Test negative page (should default to page 1)
-        response = self.url_open('/bookmarks?page=-1')
-        self.assertEqual(response.status_code, 200)
-
-        # Test page beyond available pages (should show last page or handle gracefully)
-        response = self.url_open('/bookmarks?page=999')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self._get('/bookmarks?page=0').count('Test Bookmark'), 20)
+        self.assertEqual(self._get('/bookmarks?page=-1').count('Test Bookmark'), 20)
+        self.assertEqual(self._get('/bookmarks?page=999').count('Test Bookmark'), 5)
 
     def test_pagination_non_numeric_page(self):
-        """Test pagination with non-numeric page parameter"""
+        """A non-numeric page shows the first page"""
         self._create_test_bookmarks(25)
-
-        # Test non-numeric page parameter
-        response = self.url_open('/bookmarks?page=abc')
-        self.assertEqual(response.status_code, 200)
-
-        # Should handle gracefully and show first page
-        content = response.content.decode('utf-8')
-        bookmark_count = content.count('Test Bookmark')
-        self.assertEqual(bookmark_count, 20)  # First page should show 20 items
+        self.assertEqual(self._get('/bookmarks?page=abc').count('Test Bookmark'), 20)
 
     def test_pagination_structure_and_navigation(self):
-        """Test pagination HTML structure and navigation elements"""
-        # Create enough bookmarks for multiple pages
-        self._create_test_bookmarks(45)  # Will create 3 pages
-
-        response = self.url_open('/bookmarks')
-        self.assertEqual(response.status_code, 200)
-
-        content = response.content.decode('utf-8')
-
-        # Check for pagination structure
-        self.assertIn('pagination', content)
-        self.assertIn('page-item', content)
+        """Three pages give links to pages 2 and 3"""
+        self._create_test_bookmarks(45)
+        content = self._get('/bookmarks')
         self.assertIn('page-link', content)
-
-        # Check for navigation elements
-        self.assertIn('Previous', content)  # Previous button
-        self.assertIn('Next', content)      # Next button
-
-        # Check for page numbers (should see at least page 1, 2, 3)
-        self.assertIn('1', content)
-        self.assertIn('2', content)
-        self.assertIn('3', content)
+        self.assertIn('href="/bookmarks/page/2"', content)
+        self.assertIn('href="/bookmarks/page/3"', content)
