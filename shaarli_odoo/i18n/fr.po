@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 19:56+0000\n"
+"POT-Creation-Date: 2026-10-08 22:00+0000\n"
 "PO-Revision-Date: 2025-03-03 13:48+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,8 +17,8 @@ msgstr ""
 
 #. module: shaarli_odoo
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmark_detail
-msgid "<i class=\"fa fa-calendar mr-1\" title=\"Date information\"/>"
-msgstr "<i class=\"fa fa-calendar mr-1\" title=\"Informations de date\"/>"
+msgid "<i class=\"fa fa-calendar me-1\" title=\"Date information\"/>"
+msgstr "<i class=\"fa fa-calendar me-1\" title=\"Informations de date\"/>"
 
 #. module: shaarli_odoo
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_kanban
@@ -31,8 +31,22 @@ msgstr ""
 
 #. module: shaarli_odoo
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmarks
+msgid ""
+"<i class=\"fa fa-external-link\" role=\"img\" aria-label=\"Open the link in "
+"a new tab\"/>"
+msgstr ""
+"<i class=\"fa fa-external-link\" role=\"img\" aria-label=\"Ouvrir le lien "
+"dans un nouvel onglet\"/>"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmarks
 msgid "<i class=\"fa fa-search\" title=\"Search bookmarks\"/>"
 msgstr "<i class=\"fa fa-search\" title=\"Rechercher des liens\"/>"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
+msgid "<span class=\"o_stat_text\">Archived</span>"
+msgstr "<span class=\"o_stat_text\">Archivé</span>"
 
 #. module: shaarli_odoo
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmark_detail
@@ -83,11 +97,6 @@ msgstr "Date d'archivage"
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
 msgid "Archive Page"
 msgstr "Page d'archivage"
-
-#. module: shaarli_odoo
-#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
-msgid "Archived"
-msgstr "Archivé"
 
 #. module: shaarli_odoo
 #: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__archived_content
@@ -175,6 +184,12 @@ msgstr "Liens"
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
 msgid "Clicks"
 msgstr "Clics"
+
+#. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_tag_form
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_tag_tree
+msgid "Color"
+msgstr "Couleur"
 
 #. module: shaarli_odoo
 #: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__color
@@ -421,6 +436,11 @@ msgid "Open URL"
 msgstr "Ouvrir l'URL"
 
 #. module: shaarli_odoo
+#: model_terms:ir.ui.view,arch_db:shaarli_odoo.public_bookmarks
+msgid "Open the link in a new tab"
+msgstr "Ouvrir le lien dans un nouvel onglet"
+
+#. module: shaarli_odoo
 #: model_terms:ir.actions.act_window,help:shaarli_odoo.action_bookmarks
 msgid ""
 "Organize your favorite links, share them with colleagues, and never lose a "
@@ -537,6 +557,12 @@ msgid "Tags"
 msgstr "Tags"
 
 #. module: shaarli_odoo
+#. odoo-python
+#: code:addons/shaarli_odoo/models/odoo_bookmark.py:0
+msgid "The page could not be archived: %s"
+msgstr "La page n'a pas pu être archivée : %s"
+
+#. module: shaarli_odoo
 #: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__thumbnail
 msgid "Thumbnail"
 msgstr "Miniature"
@@ -586,8 +612,8 @@ msgstr "Historique de communication du site web"
 #: model_terms:ir.actions.act_window,help:shaarli_odoo.action_public_bookmarks
 msgid "You can view all public bookmarks shared by other users here."
 msgstr ""
-"Vous pouvez voir tous les liens publics partagés par les autres utilisateurs "
-"ici."
+"Vous pouvez voir tous les liens publics partagés par les autres utilisateurs"
+" ici."
 
 #. module: shaarli_odoo
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form

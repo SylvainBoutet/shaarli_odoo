@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from odoo.exceptions import ValidationError
+import base64
+from unittest.mock import MagicMock, patch
+
+import requests
+
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import TransactionCase, tagged
 from odoo.tests.common import new_test_user
+
 
 
 @tagged('post_install', '-at_install')
@@ -97,12 +103,36 @@ class TestBookmarkModel(TransactionCase):
         self.assertEqual(result['url'], bookmark.url)
         self.assertEqual(result['target'], 'new')
 
+    def _mock_response(self, text='', content=b''):
+        response = MagicMock()
+        response.status_code = 200
+        response.text = text
+        response.content = content
+        response.headers = {'Content-Type': 'text/html'}
+        response.raise_for_status.return_value = None
+        return response
+
     def test_bookmark_action_archive_page(self):
-        """The archive button points to the archiving route"""
+        """The archive button stores the page and favicon, the form reloads"""
         bookmark = self._create()
-        result = bookmark.action_archive_page()
-        self.assertEqual(result['type'], 'ir.actions.act_url')
-        self.assertEqual(result['url'], f'/bookmarks/archive/{bookmark.id}')
+        page = self._mock_response('<p>Archived body</p>')
+        favicon = self._mock_response(content=b'icon-bytes')
+        with patch.object(self.registry['odoo.bookmark'], '_archive_http_get', side_effect=[page, favicon]) as mock_get:
+            self.assertTrue(bookmark.action_archive_page())
+        self.assertEqual(mock_get.call_args_list[0].args[0], 'https://example.com')
+        self.assertIn('Archived body', bookmark.archived_content)
+        self.assertTrue(bookmark.archived_date)
+        self.assertTrue(bookmark.has_archive)
+        self.assertEqual(bookmark.content_type, 'text/html')
+        self.assertEqual(base64.b64decode(bookmark.favicon), b'icon-bytes')
+
+    def test_bookmark_action_archive_page_failure(self):
+        """A network error is shown to the user and nothing is stored"""
+        bookmark = self._create()
+        with patch.object(self.registry['odoo.bookmark'], '_archive_http_get', side_effect=requests.ConnectionError('Connection failed')):
+            with self.assertRaises(UserError):
+                bookmark.action_archive_page()
+        self.assertFalse(bookmark.has_archive)
 
     def test_bookmark_action_view_archive(self):
         """The archive is shown in its dedicated form view"""

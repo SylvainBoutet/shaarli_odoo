@@ -62,6 +62,66 @@ class TestBookmarkSecurity(TransactionCase):
         """The manager group implies the user group"""
         self.assertTrue(self.bookmark_manager.has_group('shaarli_odoo.group_bookmark_user'))
 
+    def _private_bookmark_of(self, user):
+        return self.env['odoo.bookmark'].create({
+            'name': 'Private Bookmark',
+            'url': 'https://private-test.com',
+            'is_public': False,
+            'user_id': user.id,
+        })
+
+    def test_user_reads_own_and_public_bookmarks_only(self):
+        """A user sees their bookmarks and the public ones, not others' private ones"""
+        other_user = new_test_user(
+            self.env, login='other_bookmark_user',
+            groups='base.group_user,shaarli_odoo.group_bookmark_user')
+        own_private = self._private_bookmark_of(self.bookmark_user)
+        other_private = self._private_bookmark_of(other_user)
+        other_public = self.env['odoo.bookmark'].create({
+            'name': 'Other Public', 'url': 'https://other-public.com',
+            'is_public': True, 'user_id': other_user.id,
+        })
+        visible = self.env['odoo.bookmark'].with_user(self.bookmark_user).search([
+            ('id', 'in', (own_private | other_private | other_public).ids),
+        ])
+        self.assertEqual(visible, own_private | other_public)
+        with self.assertRaises(AccessError):
+            other_private.with_user(self.bookmark_user).read(['name'])
+
+    def test_user_cannot_modify_others_bookmarks(self):
+        """A public bookmark of another user is read-only"""
+        other_user = new_test_user(
+            self.env, login='other_bookmark_user2',
+            groups='base.group_user,shaarli_odoo.group_bookmark_user')
+        other_public = self.env['odoo.bookmark'].create({
+            'name': 'Other Public', 'url': 'https://other-public.com',
+            'is_public': True, 'user_id': other_user.id,
+        })
+        with self.assertRaises(AccessError):
+            other_public.with_user(self.bookmark_user).write({'name': 'Changed'})
+        with self.assertRaises(AccessError):
+            other_public.with_user(self.bookmark_user).unlink()
+        with self.assertRaises(AccessError):
+            self.env['odoo.bookmark'].with_user(self.bookmark_user).create({
+                'name': 'For someone else', 'url': 'https://x.com', 'user_id': other_user.id,
+            })
+
+    def test_manager_reads_and_modifies_all_bookmarks(self):
+        """A manager sees and modifies the private bookmarks of others"""
+        private = self._private_bookmark_of(self.bookmark_user)
+        as_manager = private.with_user(self.bookmark_manager)
+        self.assertEqual(as_manager.name, 'Private Bookmark')
+        as_manager.write({'name': 'Changed by manager'})
+        self.assertEqual(private.name, 'Changed by manager')
+        as_manager.unlink()
+        self.assertFalse(private.exists())
+
+    def test_public_user_cannot_read_private_bookmarks(self):
+        """The public user does not see private bookmarks"""
+        private = self._private_bookmark_of(self.bookmark_user)
+        found = self.env['odoo.bookmark'].with_user(self.public_user).search([('id', '=', private.id)])
+        self.assertFalse(found)
+
     def test_public_user_can_read_public_bookmarks(self):
         """The public user reads public bookmarks"""
         bookmarks = self.env['odoo.bookmark'].with_user(self.public_user).search([
@@ -121,6 +181,27 @@ class TestBookmarkTagSecurity(TransactionCase):
         self.assertEqual(tag.name, 'python-updated')
         tag.unlink()
         self.assertFalse(tag.exists())
+
+    def test_user_reads_but_cannot_modify_others_tags(self):
+        """Tags are readable by all bookmark users, modifiable by their owner"""
+        other_user = new_test_user(
+            self.env, login='other_tag_user',
+            groups='base.group_user,shaarli_odoo.group_bookmark_user')
+        other_tag = self.env['odoo.bookmark.tag'].create({'name': 'other', 'user_id': other_user.id})
+        self.assertEqual(other_tag.with_user(self.bookmark_user).name, 'other')
+        with self.assertRaises(AccessError):
+            other_tag.with_user(self.bookmark_user).write({'name': 'changed'})
+        with self.assertRaises(AccessError):
+            other_tag.with_user(self.bookmark_user).unlink()
+
+    def test_manager_modifies_others_tags(self):
+        """A manager modifies the tags of others"""
+        manager = new_test_user(
+            self.env, login='tag_manager',
+            groups='base.group_user,shaarli_odoo.group_bookmark_manager')
+        tag = self.env['odoo.bookmark.tag'].create({'name': 'mine', 'user_id': self.bookmark_user.id})
+        tag.with_user(manager).write({'name': 'renamed'})
+        self.assertEqual(tag.name, 'renamed')
 
     def test_basic_user_no_tag_access(self):
         """An internal user without bookmark group cannot create tags"""
