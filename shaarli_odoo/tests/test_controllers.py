@@ -308,7 +308,7 @@ class TestArchiveController(HttpCase):
             response = self.url_open(f'/bookmarks/archive/{self.test_bookmark.id}', allow_redirects=False)
         self.assertEqual(response.status_code, 303)
         self.assertTrue(response.headers['Location'].endswith(
-            f'/odoo/action-shaarli_odoo.action_bookmarks/{self.test_bookmark.id}'))
+            f'/web#action=shaarli_odoo.action_bookmarks&id={self.test_bookmark.id}&view_type=form'))
         self.assertEqual(mock_get.call_args_list[0].args[0], 'https://archive-test.com')
         self.test_bookmark.invalidate_recordset()
         # The Html field sanitizes the page: the text is kept

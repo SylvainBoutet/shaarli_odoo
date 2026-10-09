@@ -55,15 +55,15 @@ class TestShaarliTours(HttpCase):
         page = self._mock_response('<p>Tour archived page</p>')
         favicon = self._mock_response(content=b'icon-bytes')
         with patch.object(self.registry['odoo.bookmark'], '_archive_http_get', side_effect=[page, favicon]):
-            self.start_tour('/odoo/action-shaarli_odoo.action_bookmarks', 'shaarli_backend_tour', login='admin')
+            self.start_tour('/web#action=shaarli_odoo.action_bookmarks', 'shaarli_backend_tour', login='admin')
         self.assertTrue(self.private_bookmark.has_archive)
 
     def test_new_bookmark_tour(self):
         """No Open URL / Archive Page on an unsaved bookmark"""
-        self.start_tour('/odoo/action-shaarli_odoo.action_bookmarks/new', 'shaarli_new_bookmark_tour', login='admin')
+        self.start_tour('/web#action=shaarli_odoo.action_bookmarks&view_type=form', 'shaarli_new_bookmark_tour', login='admin')
         bookmark = self.env['odoo.bookmark'].search([('name', '=', 'Tour New Bookmark')])
         self.assertEqual(bookmark.url, 'https://tour-new.example.com')
 
     def test_tags_tour(self):
         """Tag list: color label and owner column"""
-        self.start_tour('/odoo/action-shaarli_odoo.action_bookmark_tags', 'shaarli_tags_tour', login='admin')
+        self.start_tour('/web#action=shaarli_odoo.action_bookmark_tags', 'shaarli_tags_tour', login='admin')

@@ -5,12 +5,12 @@
         <field name="name">odoo.bookmark.tag.tree</field>
         <field name="model">odoo.bookmark.tag</field>
         <field name="arch" type="xml">
-            <list string="Tags" editable="bottom" sample="1">
+            <tree string="Tags" editable="bottom" sample="1">
                 <field name="name"/>
                 <field name="color" widget="color_picker" string="Color"/>
                 <field name="bookmark_count"/>
                 <field name="user_id" readonly="1" optional="show"/>
-            </list>
+            </tree>
         </field>
     </record>
     
@@ -54,7 +54,7 @@
     <record id="action_bookmark_tags" model="ir.actions.act_window">
         <field name="name">Tags</field>
         <field name="res_model">odoo.bookmark.tag</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
         <field name="context">{'search_default_my_tags': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

@@ -2,6 +2,7 @@ import logging
 from urllib.parse import urlencode
 
 from odoo import _, fields, http  # noqa: F401
+from odoo.exceptions import AccessError
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -10,6 +11,28 @@ _logger = logging.getLogger(__name__)
 def _tag_url(tag_name):
     """URL of the public page filtered on a tag, with the name encoded"""
     return '/bookmarks?%s' % urlencode({'tag': tag_name})
+
+
+def _backend_form_url(bookmark_id, **params):
+    """URL of the bookmark form in the web client"""
+    args = {
+        'action': 'shaarli_odoo.action_bookmarks',
+        'id': bookmark_id,
+        'view_type': 'form',
+        **params,
+    }
+    return '/web#%s' % urlencode(args)
+
+
+def _can_write(record):
+    """True if the current user may modify the record (access rights and rules)"""
+    if not record.check_access_rights('write', raise_exception=False):
+        return False
+    try:
+        record.check_access_rule('write')
+    except AccessError:
+        return False
+    return True
 
 
 class BookmarkController(http.Controller):
@@ -139,16 +162,16 @@ class BookmarkController(http.Controller):
             raise request.not_found()
 
         # Only the bookmarks the user may modify (record rules) can be archived
-        if not bookmark.has_access('write'):
+        if not _can_write(bookmark):
             raise request.not_found()
 
         # Archive the page
         try:
             bookmark._archive_webpage()
-            return request.redirect(f'/odoo/action-shaarli_odoo.action_bookmarks/{bookmark_id}')
+            return request.redirect(_backend_form_url(bookmark_id))
         except Exception as e:
             _logger.error("Failed to archive page: %s", e)
-            return request.redirect(f'/odoo/action-shaarli_odoo.action_bookmarks/{bookmark_id}?error=archive_failed')
+            return request.redirect(_backend_form_url(bookmark_id, error='archive_failed'))
 
     # Dans controllers/main.py, ajoute ces fonctions
 

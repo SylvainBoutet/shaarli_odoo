@@ -1,6 +1,6 @@
 {
     'name': 'Odoo Bookmarks',
-    'version': '18.0.2.0.3',
+    'version': '17.0.2.0.3',
     'category': 'Website',
     'summary': 'Save and share bookmarks within Odoo',
     'description': """

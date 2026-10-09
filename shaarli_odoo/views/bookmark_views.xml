@@ -5,7 +5,7 @@
         <field name="name">odoo.bookmark.tree</field>
         <field name="model">odoo.bookmark</field>
         <field name="arch" type="xml">
-            <list string="Bookmarks" sample="1">
+            <tree string="Bookmarks" sample="1">
                 <field name="name"/>
                 <field name="url" widget="url"/>
                 <field name="domain"/>
@@ -13,7 +13,7 @@
                 <field name="create_date"/>
                 <field name="user_id" readonly="1" optional="show"/>
                 <field name="is_public" widget="boolean_toggle"/>
-            </list>
+            </tree>
         </field>
     </record>
     
@@ -74,7 +74,11 @@
                         </page>
                     </notebook>
                 </sheet>
-                <chatter/>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
@@ -118,7 +122,7 @@
                 <field name="tag_ids"/>
                 <field name="is_public"/>
                 <templates>
-                    <t t-name="card">
+                    <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click oe_kanban_card oe_kanban_color_#{kanban_color(record.color.raw_value)}">
                             <div class="oe_kanban_content">
                                 <div class="o_kanban_record_top">
@@ -160,12 +164,12 @@
     <record id="action_bookmarks" model="ir.actions.act_window">
         <field name="name">Bookmarks</field>
         <field name="res_model">odoo.bookmark</field>
-        <field name="view_mode">kanban,list,form</field>
+        <field name="view_mode">kanban,tree,form</field>
         <field name="context">{}</field>
         <field
             name="view_ids"
             eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'list', 'view_id': ref('view_bookmark_tree')}),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_bookmark_tree')}),
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_bookmark_kanban')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('view_bookmark_form')}),
             ]"
@@ -220,13 +224,13 @@
     <record id="action_public_bookmarks" model="ir.actions.act_window">
         <field name="name">Public Bookmarks</field>
         <field name="res_model">odoo.bookmark</field>
-        <field name="view_mode">kanban,list,form</field>
+        <field name="view_mode">kanban,tree,form</field>
         <field name="context">{'search_default_public': 1}</field>
         <field name="domain">[('is_public', '=', True)]</field>
         <field
             name="view_ids"
             eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'list', 'view_id': ref('view_bookmark_tree')}),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_bookmark_tree')}),
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_bookmark_kanban')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('view_bookmark_form')}),
             ]"
