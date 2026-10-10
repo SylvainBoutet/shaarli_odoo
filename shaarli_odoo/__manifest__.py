@@ -1,21 +1,16 @@
 {
-    'name': 'Odoo Bookmarks',
-    'version': '18.0.2.0.3',
+    'name': 'Shared Bookmarks',
+    'version': '18.0.2.0.4',
     'category': 'Website',
-    'summary': 'Save and share bookmarks within Odoo',
-    'description': """
-Odoo Bookmarks
-==============
-A Shaarli-like bookmarking system integrated with Odoo.
-Features:
-
-- Save bookmarks with description and notes
-- Organize with tags
-- Public/private sharing options
-- Page archiving
-- Full-text search
-- Browser extension support
-    """,
+    'summary': (
+        'Save, tag and share web bookmarks in Odoo, publish the public ones '
+        'on a website page and archive page content to read it later.'
+    ),
+    'description': (
+        'Bookmarks with tags, notes and an owner, private or public. Public '
+        'bookmarks are listed on the website, and the content of a page can '
+        'be archived on its bookmark.'
+    ),
     'author': 'Chti-tech | Sylvain Boutet',
     'website': 'https://github.com/SylvainBoutet/shaarli_odoo.git',
     'depends': ['base', 'web', 'mail', 'website'],
@@ -46,5 +41,8 @@ Features:
     'license': 'LGPL-3',
     'price': 0,
     'currency': 'EUR',
-    "images": ["static/description/public_view.png"],
+    "images": [
+        'static/description/banner.png',
+        'static/description/main_screenshot.png',
+    ],
 }
