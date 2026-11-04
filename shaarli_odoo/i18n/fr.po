@@ -147,8 +147,8 @@ msgstr "Gestion des liens"
 
 #. module: shaarli_odoo
 #: model:res.groups,name:shaarli_odoo.group_bookmark_manager
-msgid "Bookmark Manager"
-msgstr "Gestionnaire de liens"
+msgid "Administrator"
+msgstr "Administrateur"
 
 #. module: shaarli_odoo
 #: model:ir.actions.act_window,name:shaarli_odoo.action_bookmark_statistics
@@ -164,8 +164,8 @@ msgstr "Tag de lien"
 
 #. module: shaarli_odoo
 #: model:res.groups,name:shaarli_odoo.group_bookmark_user
-msgid "Bookmark User"
-msgstr "Utilisateur de lien"
+msgid "User"
+msgstr "Utilisateur"
 
 #. module: shaarli_odoo
 #: model:ir.actions.act_window,name:shaarli_odoo.action_bookmarks
@@ -543,8 +543,7 @@ msgid "Tag Name"
 msgstr "Nom du tag"
 
 #. module: shaarli_odoo
-#. odoo-python
-#: code:addons/shaarli_odoo/models/odoo_bookmark_tag.py:0
+#: model:ir.model.constraint,message:shaarli_odoo.constraint_odoo_bookmark_tag__name_user_uniq
 msgid "Tag name must be unique per user!"
 msgstr "Le nom du tag doit être unique par utilisateur !"
 

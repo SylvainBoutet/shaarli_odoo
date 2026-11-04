@@ -1,6 +1,6 @@
 {
     'name': 'Shared Bookmarks',
-    'version': '19.0.2.0.4',
+    'version': '19.0.2.1.0',
     'category': 'Website',
     'summary': (
         'Save, tag and share web bookmarks in Odoo, publish the public ones '
@@ -11,7 +11,7 @@
         'bookmarks are listed on the website, and the content of a page can '
         'be archived on its bookmark.'
     ),
-    'author': 'IROKOO | CHTITECH',
+    'author': 'IROKOO | CHTI-TECH | Sylvain Boutet',
     'website': 'https://github.com/SylvainBoutet/shaarli_odoo.git',
     'depends': ['base', 'web', 'mail', 'website'],
     'external_dependencies': {

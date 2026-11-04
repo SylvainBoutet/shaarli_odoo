@@ -4,10 +4,12 @@ import base64
 from unittest.mock import MagicMock, patch
 
 import requests
+from psycopg2 import IntegrityError
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
 from odoo.tests.common import new_test_user
+from odoo.tools import mute_logger
 
 
 
@@ -187,17 +189,18 @@ class TestBookmarkTagModel(TransactionCase):
         self.assertEqual(tag.user_id, self.test_user)
 
     def test_tag_unique_name_per_user(self):
-        """A user cannot own two tags with the same name"""
+        """A user cannot own two tags with the same name (database constraint)"""
         self.env['odoo.bookmark.tag'].create({'name': 'python', 'user_id': self.test_user.id})
-        with self.assertRaises(ValidationError):
+        with mute_logger('odoo.sql_db'), self.assertRaises(IntegrityError):
             self.env['odoo.bookmark.tag'].create({'name': 'python', 'user_id': self.test_user.id})
 
     def test_tag_rename_to_existing_name(self):
         """Renaming a tag to a name the user already has is refused"""
         self.env['odoo.bookmark.tag'].create({'name': 'python', 'user_id': self.test_user.id})
         tag = self.env['odoo.bookmark.tag'].create({'name': 'django', 'user_id': self.test_user.id})
-        with self.assertRaises(ValidationError):
+        with mute_logger('odoo.sql_db'), self.assertRaises(IntegrityError):
             tag.write({'name': 'python'})
+            tag.flush_recordset()
 
     def test_tag_different_users_same_name(self):
         """Two users can own a tag with the same name"""
