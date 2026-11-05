@@ -1,6 +1,6 @@
 {
     'name': 'Shared Bookmarks',
-    'version': '19.0.2.1.0',
+    'version': '19.0.2.2.0',
     'category': 'Website',
     'summary': (
         'Save, tag and share web bookmarks in Odoo, publish the public ones '
