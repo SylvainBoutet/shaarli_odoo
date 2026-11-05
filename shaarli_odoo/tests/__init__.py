@@ -5,3 +5,4 @@ from . import test_controllers
 from . import test_pagination
 from . import test_security
 from . import test_tours
+from . import test_translations

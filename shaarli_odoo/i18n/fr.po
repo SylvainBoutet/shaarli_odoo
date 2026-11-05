@@ -131,7 +131,7 @@ msgstr "Date d'archivage"
 #. module: shaarli_odoo
 #: model_terms:ir.ui.view,arch_db:shaarli_odoo.view_bookmark_form
 msgid "Archive Page"
-msgstr "Page d'archivage"
+msgstr "Archiver la page"
 
 #. module: shaarli_odoo
 #: model:ir.model.fields,field_description:shaarli_odoo.field_odoo_bookmark__archived_content
